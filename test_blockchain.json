@@ -1,0 +1,22 @@
+{
+  "chain": [
+    {
+      "index": 0,
+      "data": "Genesis Block",
+      "previous_hash": "0",
+      "timestamp": 1755116973.823211,
+      "nonce": 164,
+      "hash": "0075110a1f6009d7da5fcee51a670ff726db023977b9df9555ed0899485517c9"
+    },
+    {
+      "index": 1,
+      "data": "[\"Persistent data 1\", \"Persistent data 2\"]",
+      "previous_hash": "0075110a1f6009d7da5fcee51a670ff726db023977b9df9555ed0899485517c9",
+      "timestamp": 1755116973.824629,
+      "nonce": 63,
+      "hash": "002af49502d020d99486da50ac7a0420c9cd2a7dc91cf45cd5c884b0ccc05d49"
+    }
+  ],
+  "pending_data": [],
+  "difficulty": 2
+}
