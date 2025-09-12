@@ -3,7 +3,7 @@
 Simple test script to demonstrate blockchain functionality.
 """
 
-from blockchain import Blockchain, create_string_blockchain
+from src.chainright.blockchain import Blockchain, create_string_blockchain
 
 
 def test_basic_functionality():

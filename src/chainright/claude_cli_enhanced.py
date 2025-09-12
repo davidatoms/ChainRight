@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from colorama import init, Fore, Back, Style
 
 # Import the blockchain classes
-from blockchain import Block, Blockchain
+from .blockchain import Block, Blockchain
 
 # Initialize colorama for cross-platform color support
 init(autoreset=True)

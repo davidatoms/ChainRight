@@ -13,7 +13,7 @@ import sys
 import os
 
 # Import the blockchain classes
-from blockchain import Block, Blockchain
+from .blockchain import Block, Blockchain
 
 
 class ClaudeCLI:

@@ -16,7 +16,7 @@ from typing import List, Dict, Any
 from dotenv import load_dotenv
 
 # Import the blockchain classes
-from blockchain import Block, Blockchain
+from .blockchain import Block, Blockchain
 
 
 class ClaudeCLIReal:

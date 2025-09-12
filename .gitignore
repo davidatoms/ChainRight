@@ -1,19 +1,12 @@
-# Environment variables and API keys
-.env
-.env.local
-.env.*.local
-CLAUDE_API_KEY
-
-# User-specific data
-.user_id
-personal_ai_data/
-global_conversations.json
-
-# Python
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# C extensions
 *.so
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -27,67 +20,95 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
 
-# Virtual environments
-chainrightvenv/
-venv/
-ENV/
-env/
-.venv/
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
-# OS
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
 
-# Blockchain data files (optional - remove if you want to track them)
-*.json
-!example.json
-!test_blockchain.json
+# Translations
+*.mo
+*.pot
 
-# Logs
+# Django stuff:
 *.log
-logs/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
 
-# Temporary files
-*.tmp
-*.temp
-temp/
-tmp/
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
 
 # pyenv
 .python-version
 
 # pipenv
-Pipfile.lock
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
 
-# PEP 582
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
-# Celery
+# Celery stuff
 celerybeat-schedule
 celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Spyder project settings
 .spyderproject
@@ -107,12 +128,28 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Project-specific
-blockchain_visualization_*.txt
-analysis_*.json
-claude_conversation_*.json
-claude_interactions_*.json
-ownership_blockchain_*.json
-wordlist_blockchain_*.json
-visualization_*.txt
-comparative_analysis.json
+# Project specific
+logs/*.log
+data/*.json
+data/*.csv
+.user_id
+personal_ai_data/
+blockchain_*.json
+conversation_*.json
+training_data_*/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

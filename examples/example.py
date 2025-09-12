@@ -3,7 +3,7 @@
 Example script demonstrating how to create a blockchain with input strings.
 """
 
-from blockchain import Blockchain, create_string_blockchain
+from src.chainright.blockchain import Blockchain, create_string_blockchain
 from datetime import datetime
 
 
