@@ -20,7 +20,7 @@ def create_bar_chart(data: Dict[str, int], title: str, max_width: int = 50) -> s
     
     for key, value in sorted(data.items()):
         bar_length = int((value / max_value) * max_width) if max_value > 0 else 0
-        bar = "█" * bar_length
+        bar = "#" * bar_length
         chart += f"{key:>10}: {bar} {value:,}\n"
     
     return chart
@@ -39,7 +39,7 @@ def create_word_length_distribution(words: List[str]) -> str:
     for length in sorted(length_counts.keys()):
         count = length_counts[length]
         bar_length = int((count / max_count) * 30) if max_count > 0 else 0
-        bar = "█" * bar_length
+        bar = "#" * bar_length
         chart += f"{length:>6} | {count:>5} | {bar}\n"
     
     return chart
@@ -55,7 +55,7 @@ def create_alphabetical_distribution(words: List[str]) -> str:
         if letter in letter_counts:
             count = letter_counts[letter]
             bar_length = int((count / max(letter_counts.values())) * 40)
-            bar = "█" * bar_length
+            bar = "#" * bar_length
             chart += f"{letter.upper()}: {bar} {count:,}\n"
     
     return chart

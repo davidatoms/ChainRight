@@ -12,25 +12,25 @@ ChainRight creates a **global conversation blockchain** where:
 
 ## Features
 
-### 🔗 **Global Conversation Blockchain**
+### **Global Conversation Blockchain**
 - Immutable record of all human-AI conversations
 - Cryptographic attribution and ownership verification
 - Searchable conversation history
 - Duplicate-tolerant data storage
 
-### 🤖 **Personal AI Training**
+### **Personal AI Training**
 - Extract your conversations for personal AI training
 - Generate training datasets in multiple formats
 - Track your learning progress and patterns
 - Create personalized AI models from your data
 
-### 📊 **AI Training Dataset Generation**
+### **AI Training Dataset Generation**
 - Export conversations for model training
 - Multiple formats: OpenAI, JSONL, CSV, Knowledge Base
 - Global dataset for shared AI development
 - Reduce training duplication across companies
 
-### 🔐 **Privacy & Security**
+### **Privacy & Security**
 - User-controlled data ownership
 - Cryptographic verification of message authenticity
 - Private API key management

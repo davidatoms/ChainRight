@@ -43,9 +43,9 @@ def demonstrate_ownership():
     print("\nMining block with sentences from Alice, Bob, and Carol...")
     block1 = blockchain.mine_pending_sentences(today)
     
-    print(f"✓ Block 1 mined! Hash: {block1.hash[:16]}...")
-    print(f"✓ Authors in this block: {block1.get_authors()}")
-    print(f"✓ Total sentences in block: {len(block1.sentences)}")
+    print(f"Block 1 mined! Hash: {block1.hash[:16]}...")
+    print(f"Authors in this block: {block1.get_authors()}")
+    print(f"Total sentences in block: {len(block1.sentences)}")
     
     print("\n" + "="*60)
     
@@ -67,9 +67,9 @@ def demonstrate_ownership():
     print("\nMining second block with sentences from David and Eve...")
     block2 = blockchain.mine_pending_sentences(today)
     
-    print(f"✓ Block 2 mined! Hash: {block2.hash[:16]}...")
-    print(f"✓ Authors in this block: {block2.get_authors()}")
-    print(f"✓ Total sentences in block: {len(block2.sentences)}")
+    print(f"Block 2 mined! Hash: {block2.hash[:16]}...")
+    print(f"Authors in this block: {block2.get_authors()}")
+    print(f"Total sentences in block: {len(block2.sentences)}")
     
     print("\n" + "="*60)
     
