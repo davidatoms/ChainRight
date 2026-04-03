@@ -186,7 +186,8 @@ This is a private repository. For contributions:
 
 ## License
 
-Private repository - All rights reserved.
+- **Codebase**: Licensed under the [Apache License, Version 2.0](LICENSE).
+- **Conversation Datasets**: Licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 
 ## Support
 
