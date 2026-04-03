@@ -1,212 +1,57 @@
-# ChainRight - Global Conversation Blockchain
+# ChainRight: The Relativistic Conversation Blockchain
 
-A decentralized platform for creating immutable, attributed conversations with AI that can be used for personal AI training and global knowledge sharing.
+**ChainRight** is a decentralized engine designed to transform transient AI interactions into immutable, attributed, and verifiable "Knowledge Assets." 
 
-## Vision
+By treating every conversation as a trajectory through a semantic manifold, ChainRight uses relativistic metrics to determine the "computational effort" required to preserve a thought. It is the first blockchain system where the mining difficulty is a direct function of the **cognitive complexity** of the data being recorded.
 
-ChainRight creates a **global conversation blockchain** where:
-- Every conversation is permanently recorded and attributed
-- Users own their data and can train personal AI models
-- Companies can access shared training datasets
-- Knowledge is distilled and preserved immutably
+---
 
-## Features
+## 🌌 The Vision: From Flat Logs to Curved Manifolds
 
-### **Global Conversation Blockchain**
-- Immutable record of all human-AI conversations
-- Cryptographic attribution and ownership verification
-- Searchable conversation history
-- Duplicate-tolerant data storage
+Standard chat logs are "flat"—they record text but lose the context of effort, stability, and intellectual "sharpness." ChainRight introduces a **Relativistic Engine** that gauges each interaction using three core geometric primitives:
 
-### **Personal AI Training**
-- Extract your conversations for personal AI training
-- Generate training datasets in multiple formats
-- Track your learning progress and patterns
-- Create personalized AI models from your data
+1.  **Semantic Curvature ($\kappa$):** Measures the "turn" in information space. A predictable chat has low curvature; a radical cognitive shift or a creative breakthrough has high curvature.
+2.  **Information Energy ($E$):** Derived from information density. Dense, technical, or code-heavy responses represent higher "Energy" states.
+3.  **Gaussian Wells:** Identifies "Basins of Stability" (where a model is confident and structured) versus "Chaotic Ridges" (where a model is transitioning or potentially hallucinating).
 
-### **AI Training Dataset Generation**
-- Export conversations for model training
-- Multiple formats: OpenAI, JSONL, CSV, Knowledge Base
-- Global dataset for shared AI development
-- Reduce training duplication across companies
+---
 
-### **Privacy & Security**
-- User-controlled data ownership
-- Cryptographic verification of message authenticity
-- Private API key management
-- Secure blockchain validation
+## 📈 Big O as "Computational Gravity"
 
-## Quick Start
+In traditional computer science, **Big O notation** measures the efficiency of an algorithm. In **ChainRight**, we use Big O to define the **Proof of Effort**:
 
-### 1. Setup Environment
+- **$O(1)$ - Geodesic Paths:** Simple, stable conversations are computationally "cheap" to mine. They follow the path of least resistance on the manifold.
+- **$O(n \log n)$ - State Transitions:** Complex logic requiring significant "internal work" from the AI increases the curvature, raising the mining difficulty.
+- **$O(Singularity)$ - Ricci Flow Surgery:** When a conversation reaches an extreme level of complexity or temperature, the engine performs a **Ricci Flow Surgery**. The current manifold is archived, and a new one is birthed, preserving the lineage through a symbolic cryptographic link.
 
+---
+
+## 🛠 Features
+
+- **Multi-Provider Support:** Integrated with Claude, GPT-4, Gemini, Mistral, and DeepSeek.
+- **Device Awareness:** Automatically detects if it's running on a **Compute Node** (Server/PC) or an **Edge Signal** device (BCI/Embedded) and adjusts its constraints accordingly.
+- **Knowledge Provenance:** Every block records the `node_type`, `latency_ms`, and `geometric_score`, proving exactly how much "work" went into generating that specific piece of knowledge.
+
+---
+
+## 🚀 Quick Start
+
+### Installation
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd ChainRightv1
-
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
+pip install -e .
 ```
 
-### 2. Configure API Key
-
-Create a `.env` file in the project root:
+### Start the Multi-Provider CLI
 ```bash
-CLAUDE_API_KEY=sk-ant-your-api-key-here
+chainright-multi
 ```
 
-Get your API key from [Anthropic Console](https://console.anthropic.com/)
+---
 
-### 3. Run the Global Conversation System
-
-```bash
-# Start the global conversation blockchain
-python global_conversation_blockchain.py
-
-# Commands available:
-# /stats - Show blockchain statistics
-# /verify <message> - Verify message ownership
-# /search <term> - Search message content
-# /my-conversations - Show your conversations
-# /save - Save blockchain
-```
-
-### 4. Generate Personal AI Training Data
-
-```bash
-# Train your own AI from your conversations
-python personal_ai_trainer.py
-
-# Commands available:
-# /load <user_id> - Load your conversation data
-# /stats - Show your personal statistics
-# /generate - Generate training datasets
-# /train - Prepare for model training
-```
-
-### 5. Export AI Training Datasets
-
-```bash
-# Export global datasets for AI training
-python ai_training_dataset.py
-
-# Commands available:
-# /load <blockchain_file> - Load blockchain file
-# /stats - Show dataset statistics
-# /export <format> <filename> - Export training data
-# /formats - Show available export formats
-```
-
-## Available Scripts
-
-### Core Blockchain
-- `blockchain.py` - Core blockchain implementation
-- `global_conversation_blockchain.py` - Global conversation system
-- `claude_cli_real.py` - Real Claude API integration
-- `claude_cli_enhanced.py` - Enhanced CLI with colors and model selection
-
-### Personal AI Training
-- `personal_ai_trainer.py` - Personal AI training system
-- `ai_training_dataset.py` - Global dataset export
-
-### Demos and Examples
-- `demo_claude_cli.py` - Automated demo
-- `test_claude_api.py` - API connection test
-- `setup_claude_api.sh` - Setup script
-
-## Data Formats
-
-### Conversation Structure
-```json
-{
-  "user_id": "user_1734112345_12345",
-  "message": "Hello Claude, how does blockchain work?",
-  "message_type": "user_input",
-  "session_id": "a1b2c3d4",
-  "timestamp": "2025-08-13T15:30:00.123456",
-  "message_hash": "abc123...",
-  "user_hash": "def456...",
-  "metadata": {}
-}
-```
-
-### Training Dataset Formats
-- **OpenAI**: Fine-tuning format for GPT models
-- **JSONL**: Standard format for local models
-- **CSV**: Tabular data for analysis
-- **Knowledge Base**: Structured Q&A for RAG systems
-
-## Use Cases
-
-### For Individuals
-- **Personal Knowledge Base**: Build your own AI from your conversations
-- **Learning Tracking**: Monitor your learning progress over time
-- **Knowledge Distillation**: Extract insights from your interactions
-- **Personal AI Models**: Train models that understand your style
-
-### For Companies
-- **Shared Training Data**: Access global conversation datasets
-- **Reduced Training Costs**: Eliminate duplicate data collection
-- **Better AI Models**: Train on diverse, real conversations
-- **Transparent Attribution**: Verify data sources and ownership
-
-### For AI Development
-- **Decentralized Training**: One dataset serves all developers
-- **Quality Data**: Real conversations, not synthetic data
-- **Continuous Improvement**: Dataset grows with usage
-- **Efficient Training**: No need to retrain on same data
-
-## Security Features
-
-- **Immutable Records**: Once added, conversations cannot be altered
-- **Cryptographic Verification**: SHA-256 hashing for integrity
-- **User Attribution**: Clear ownership of all messages
-- **Private API Keys**: Secure environment variable management
-- **Blockchain Validation**: Proof-of-work ensures data integrity
-
-## Privacy
-
-- **User Control**: You own your conversation data
-- **Selective Sharing**: Choose what to include in training datasets
-- **Anonymization Options**: Remove personal identifiers if needed
-- **Local Processing**: Process data locally before sharing
-
-## Contributing
-
-This is a private repository. For contributions:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
+## ⚖️ License
 
 - **Codebase**: Licensed under the [Apache License, Version 2.0](LICENSE).
 - **Conversation Datasets**: Licensed under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 
-## Support
-
-For issues and questions:
-- Check the documentation in each script
-- Review the example outputs
-- Test with the demo scripts first
-
-## Future Enhancements
-
-- Web interface for blockchain visualization
-- Real-time collaboration features
-- Advanced model training pipelines
-- Multi-language support
-- Mobile application
-- API endpoints for integration
-- Advanced analytics and insights
-- Federated learning support
-
 ---
-
-**ChainRight**: Where conversations become knowledge, and knowledge becomes AI.
+**ChainRight**: Mapping the geometry of thought.
