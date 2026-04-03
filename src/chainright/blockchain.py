@@ -4,8 +4,9 @@ import time
 from typing import List, Dict, Any
 from datetime import datetime
 from .geometrics import LLMGeometrics
+from .device_awareness import DeviceAwareness
 
-# Load settings
+# Load static settings and apply dynamic overrides
 try:
     with open('config/settings.json', 'r') as f:
         SETTINGS = json.load(f)
@@ -17,19 +18,24 @@ except:
         "ledger_prefix": "ledgers/chain_"
     }
 
+# Apply Device Awareness Overrides
+device_config = DeviceAwareness.get_edge_case_config()
+SETTINGS.update(device_config)
+
 
 class Block:
     """Represents a single block in the blockchain."""
     
     def __init__(self, index: int, data: str, previous_hash: str, timestamp: float = None, 
-                 difficulty: int = 4, parent_chain: str = None):
+                 difficulty: int = 4, parent_chain: str = None, node_type: str = "COMPUTE_NODE"):
         self.index = index
         self.data = data
         self.previous_hash = previous_hash
         self.timestamp = timestamp or time.time()
         self.nonce = 0
         self.difficulty = difficulty
-        self.parent_chain = parent_chain # Reference for Ricci Surgery
+        self.parent_chain = parent_chain 
+        self.node_type = node_type # Record the device signature
         self.hash = self.calculate_hash()
     
     def calculate_hash(self) -> str:
@@ -41,7 +47,8 @@ class Block:
             'timestamp': self.timestamp,
             'nonce': self.nonce,
             'difficulty': self.difficulty,
-            'parent_chain': self.parent_chain
+            'parent_chain': self.parent_chain,
+            'node_type': self.node_type
         }, sort_keys=True)
         return hashlib.sha256(block_string.encode()).hexdigest()
     
@@ -66,7 +73,8 @@ class Block:
             'nonce': self.nonce,
             'hash': self.hash,
             'difficulty': self.difficulty,
-            'parent_chain': self.parent_chain
+            'parent_chain': self.parent_chain,
+            'node_type': self.node_type
         }
     
     @classmethod
@@ -78,7 +86,8 @@ class Block:
             previous_hash=block_dict['previous_hash'],
             timestamp=block_dict['timestamp'],
             difficulty=block_dict.get('difficulty', 4),
-            parent_chain=block_dict.get('parent_chain')
+            parent_chain=block_dict.get('parent_chain'),
+            node_type=block_dict.get('node_type', 'COMPUTE_NODE')
         )
         block.nonce = block_dict['nonce']
         block.hash = block_dict['hash']
@@ -86,12 +95,13 @@ class Block:
 
 
 class Blockchain:
-    """A simple blockchain implementation with Ricci Flow Surgery."""
+    """A simple blockchain implementation with Ricci Flow Surgery and Device Awareness."""
     
     def __init__(self, difficulty: int = None, parent_chain: str = None):
         self.chain: List[Block] = []
         self.base_difficulty = difficulty if difficulty is not None else SETTINGS["base_difficulty"]
         self.parent_chain = parent_chain
+        self.node_type = SETTINGS["device_signature"]
         self.pending_data: List[str] = []
         
         # Create the genesis block
@@ -99,13 +109,14 @@ class Blockchain:
     
     def create_genesis_block(self) -> None:
         """Create the first block in the chain."""
-        genesis_data = "Genesis Block"
+        genesis_data = f"Genesis Block (Node: {self.node_type})"
         if self.parent_chain:
             genesis_data = f"Genesis Block (Surgery Link to {self.parent_chain})"
             
         genesis_block = Block(0, genesis_data, "0", 
                               difficulty=self.base_difficulty,
-                              parent_chain=self.parent_chain)
+                              parent_chain=self.parent_chain,
+                              node_type=self.node_type)
         genesis_block.mine_block()
         self.chain.append(genesis_block)
     
@@ -162,7 +173,7 @@ class Blockchain:
                 "new_active_name": f"manifold_{short_hash}_active.json"
             }
             
-        # Clamp difficulty for standard mining
+        # Clamp difficulty for standard mining based on DEVICE capability
         clamped_difficulty = min(raw_difficulty, SETTINGS["max_difficulty_clamp"])
         
         new_block = Block(
@@ -170,7 +181,8 @@ class Blockchain:
             data=block_data,
             previous_hash=self.get_latest_block().hash,
             difficulty=clamped_difficulty,
-            parent_chain=self.parent_chain
+            parent_chain=self.parent_chain,
+            node_type=self.node_type
         )
         
         # Mine the block

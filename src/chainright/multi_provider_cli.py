@@ -208,7 +208,14 @@ class MultiProviderCLI:
 
     def run(self):
         """Main loop."""
+        from .device_awareness import DeviceAwareness
+        device = DeviceAwareness.classify_device()
+        
         print(f"{Fore.CYAN}ChainRight Multi-Provider Blockchain CLI")
+        print(f"{Fore.CYAN}{'='*60}")
+        print(f"{Fore.MAGENTA}Node Classification: {device['type']}")
+        print(f"{Fore.MAGENTA}P2P Handshake Ready: {'YES (T)' if device['p2p_status'] else 'NO (F)'}")
+        print(f"{Fore.WHITE}System Specs: {device['metrics']['cpus']} CPUs, {device['metrics']['ram_gb']}GB RAM")
         print(f"{Fore.CYAN}{'='*60}")
         
         self.select_provider_and_model()
