@@ -56,26 +56,31 @@ class GlobalConversationBlockchain:
             print(f"{Fore.RED}Error saving blockchain: {e}")
     
     def add_conversation_entry(self, user_id: str, message: str, message_type: str, 
-                              session_id: str, metadata: Dict = None) -> Block:
+                              session_id: str, metadata: Dict = None, latency_ms: float = 0) -> Block:
         """Add a conversation entry to the global blockchain."""
         
         # Create comprehensive metadata
         entry_data = {
             "user_id": user_id,
             "message": message,
-            "message_type": message_type,  # "user_input" or "claude_response"
+            "message_type": message_type,
             "session_id": session_id,
             "timestamp": datetime.now().isoformat(),
             "message_hash": hashlib.sha256(message.encode('utf-8')).hexdigest(),
             "user_hash": hashlib.sha256(user_id.encode('utf-8')).hexdigest(),
+            "latency_ms": latency_ms,
             "metadata": metadata or {}
         }
         
         # Add to blockchain
         self.blockchain.add_data(json.dumps(entry_data))
-        block = self.blockchain.mine_pending_data()
+        result = self.blockchain.mine_pending_data(latency_ms=latency_ms)
         
-        return block
+        # Update our filename if a surgery occurred
+        if result["surgery"]["performed"]:
+            self.blockchain_file = result["surgery"]["new_active_name"]
+            
+        return result["block"]
     
     def verify_message_ownership(self, message: str, user_id: str = None) -> List[Dict]:
         """Verify who owns a specific message."""

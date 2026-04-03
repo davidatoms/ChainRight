@@ -58,6 +58,7 @@ Issues = "https://github.com/davidadams/chainright/issues"
 chainright-cli = "chainright.claude_cli_real:main"
 chainright-demo = "chainright.global_conversation_blockchain:main"
 chainright-train = "chainright.personal_ai_trainer:main"
+chainright-multi = "chainright.multi_provider_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

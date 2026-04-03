@@ -1,0 +1,136 @@
+{
+  "providers": [
+    {
+      "name": "Anthropic",
+      "company": "Anthropic PBC",
+      "api_env_var": "CLAUDE_API_KEY",
+      "base_url": "https://api.anthropic.com/v1/messages",
+      "models": [
+        {
+          "id": "claude-3-5-sonnet-20241022",
+          "display_name": "Claude 3.5 Sonnet",
+          "description": "Most capable, balanced performance and speed",
+          "context_window": 200000
+        },
+        {
+          "id": "claude-3-5-haiku-20241022",
+          "display_name": "Claude 3.5 Haiku",
+          "description": "Fastest, most affordable model",
+          "context_window": 200000
+        },
+        {
+          "id": "claude-3-opus-20240229",
+          "display_name": "Claude 3 Opus",
+          "description": "Powerful model for complex tasks",
+          "context_window": 200000
+        }
+      ]
+    },
+    {
+      "name": "OpenAI",
+      "company": "OpenAI, Inc.",
+      "api_env_var": "OPENAI_API_KEY",
+      "base_url": "https://api.openai.com/v1/chat/completions",
+      "models": [
+        {
+          "id": "gpt-4o",
+          "display_name": "GPT-4o",
+          "description": "Omni model, high intelligence and speed",
+          "context_window": 128000
+        },
+        {
+          "id": "gpt-4o-mini",
+          "display_name": "GPT-4o mini",
+          "description": "Small, fast, and highly capable",
+          "context_window": 128000
+        },
+        {
+          "id": "o1-preview",
+          "display_name": "o1-preview",
+          "description": "Reasoning model for complex problems",
+          "context_window": 128000
+        }
+      ]
+    },
+    {
+      "name": "Google",
+      "company": "Google LLC",
+      "api_env_var": "GEMINI_API_KEY",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta/models/",
+      "models": [
+        {
+          "id": "gemini-1.5-pro",
+          "display_name": "Gemini 1.5 Pro",
+          "description": "Highly capable model with massive context",
+          "context_window": 2000000
+        },
+        {
+          "id": "gemini-1.5-flash",
+          "display_name": "Gemini 1.5 Flash",
+          "description": "Fast and efficient for high-volume tasks",
+          "context_window": 1000000
+        }
+      ]
+    },
+    {
+      "name": "Meta",
+      "company": "Meta Platforms, Inc.",
+      "api_env_var": "GROQ_API_KEY",
+      "base_url": "https://api.groq.com/openai/v1/chat/completions",
+      "models": [
+        {
+          "id": "llama-3.3-70b-versatile",
+          "display_name": "Llama 3.3 70B",
+          "description": "State-of-the-art open model (via Groq)",
+          "context_window": 128000
+        },
+        {
+          "id": "llama-3.1-8b-instant",
+          "display_name": "Llama 3.1 8B",
+          "description": "Ultra-fast open model (via Groq)",
+          "context_window": 128000
+        }
+      ]
+    },
+    {
+      "name": "Mistral",
+      "company": "Mistral AI",
+      "api_env_var": "MISTRAL_API_KEY",
+      "base_url": "https://api.mistral.ai/v1/chat/completions",
+      "models": [
+        {
+          "id": "mistral-large-latest",
+          "display_name": "Mistral Large",
+          "description": "Top-tier reasoning and multilingual",
+          "context_window": 128000
+        },
+        {
+          "id": "codestral-latest",
+          "display_name": "Codestral",
+          "description": "Optimized for code generation",
+          "context_window": 32000
+        }
+      ]
+    },
+    {
+      "name": "DeepSeek",
+      "company": "DeepSeek-AI",
+      "api_env_var": "DEEPSEEK_API_KEY",
+      "base_url": "https://api.deepseek.com/chat/completions",
+      "models": [
+        {
+          "id": "deepseek-chat",
+          "display_name": "DeepSeek V3",
+          "description": "Highly intelligent and cost-effective",
+          "context_window": 64000
+        },
+        {
+          "id": "deepseek-reasoner",
+          "display_name": "DeepSeek R1",
+          "description": "Deep thinking and reasoning model",
+          "context_window": 64000
+        }
+      ]
+    }
+  ]
+}

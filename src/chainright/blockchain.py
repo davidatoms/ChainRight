@@ -3,17 +3,33 @@ import json
 import time
 from typing import List, Dict, Any
 from datetime import datetime
+from .geometrics import LLMGeometrics
+
+# Load settings
+try:
+    with open('config/settings.json', 'r') as f:
+        SETTINGS = json.load(f)
+except:
+    SETTINGS = {
+        "base_difficulty": 2,
+        "max_difficulty_clamp": 6,
+        "surgery_threshold": 7,
+        "ledger_prefix": "ledgers/chain_"
+    }
 
 
 class Block:
     """Represents a single block in the blockchain."""
     
-    def __init__(self, index: int, data: str, previous_hash: str, timestamp: float = None):
+    def __init__(self, index: int, data: str, previous_hash: str, timestamp: float = None, 
+                 difficulty: int = 4, parent_chain: str = None):
         self.index = index
         self.data = data
         self.previous_hash = previous_hash
         self.timestamp = timestamp or time.time()
         self.nonce = 0
+        self.difficulty = difficulty
+        self.parent_chain = parent_chain # Reference for Ricci Surgery
         self.hash = self.calculate_hash()
     
     def calculate_hash(self) -> str:
@@ -23,15 +39,20 @@ class Block:
             'data': self.data,
             'previous_hash': self.previous_hash,
             'timestamp': self.timestamp,
-            'nonce': self.nonce
+            'nonce': self.nonce,
+            'difficulty': self.difficulty,
+            'parent_chain': self.parent_chain
         }, sort_keys=True)
         return hashlib.sha256(block_string.encode()).hexdigest()
     
-    def mine_block(self, difficulty: int) -> None:
+    def mine_block(self, difficulty: int = None) -> None:
         """Mine the block with proof of work."""
-        target = '0' * difficulty
+        if difficulty is not None:
+            self.difficulty = difficulty
+            
+        target = '0' * self.difficulty
         
-        while self.hash[:difficulty] != target:
+        while self.hash[:self.difficulty] != target:
             self.nonce += 1
             self.hash = self.calculate_hash()
     
@@ -43,7 +64,9 @@ class Block:
             'previous_hash': self.previous_hash,
             'timestamp': self.timestamp,
             'nonce': self.nonce,
-            'hash': self.hash
+            'hash': self.hash,
+            'difficulty': self.difficulty,
+            'parent_chain': self.parent_chain
         }
     
     @classmethod
@@ -53,7 +76,9 @@ class Block:
             index=block_dict['index'],
             data=block_dict['data'],
             previous_hash=block_dict['previous_hash'],
-            timestamp=block_dict['timestamp']
+            timestamp=block_dict['timestamp'],
+            difficulty=block_dict.get('difficulty', 4),
+            parent_chain=block_dict.get('parent_chain')
         )
         block.nonce = block_dict['nonce']
         block.hash = block_dict['hash']
@@ -61,11 +86,12 @@ class Block:
 
 
 class Blockchain:
-    """A simple blockchain implementation."""
+    """A simple blockchain implementation with Ricci Flow Surgery."""
     
-    def __init__(self, difficulty: int = 4):
+    def __init__(self, difficulty: int = None, parent_chain: str = None):
         self.chain: List[Block] = []
-        self.difficulty = difficulty
+        self.base_difficulty = difficulty if difficulty is not None else SETTINGS["base_difficulty"]
+        self.parent_chain = parent_chain
         self.pending_data: List[str] = []
         
         # Create the genesis block
@@ -73,8 +99,14 @@ class Blockchain:
     
     def create_genesis_block(self) -> None:
         """Create the first block in the chain."""
-        genesis_block = Block(0, "Genesis Block", "0")
-        genesis_block.mine_block(self.difficulty)
+        genesis_data = "Genesis Block"
+        if self.parent_chain:
+            genesis_data = f"Genesis Block (Surgery Link to {self.parent_chain})"
+            
+        genesis_block = Block(0, genesis_data, "0", 
+                              difficulty=self.base_difficulty,
+                              parent_chain=self.parent_chain)
+        genesis_block.mine_block()
         self.chain.append(genesis_block)
     
     def get_latest_block(self) -> Block:
@@ -85,21 +117,64 @@ class Blockchain:
         """Add data to the pending transactions."""
         self.pending_data.append(data)
     
-    def mine_pending_data(self) -> Block:
-        """Mine all pending data into a new block."""
+    def mine_pending_data(self, latency_ms: float = 0) -> Dict[str, Any]:
+        """Mine all pending data into a new block using relativistic difficulty."""
         if not self.pending_data:
             raise ValueError("No pending data to mine")
         
         # Create a new block with all pending data
         block_data = json.dumps(self.pending_data)
+        
+        # Calculate relativistic metrics
+        raw_difficulty = LLMGeometrics.score_difficulty(
+            block_data, 
+            base_difficulty=self.base_difficulty,
+            latency_ms=latency_ms
+        )
+        
+        surgery_info = {"performed": False, "archive_name": None}
+        
+        # Check for Ricci Flow Surgery
+        if raw_difficulty >= SETTINGS["surgery_threshold"]:
+            parent_hash = self.get_latest_block().hash
+            short_hash = parent_hash[:12]
+            archive_name = f"manifold_{short_hash}_archived.json"
+            
+            print(f"\n\033[91m[RICCI FLOW SURGERY PERFORMED]\033[0m")
+            print(f"\033[93mMaximum Temperature Reached. Curvature too extreme for current manifold.\033[0m")
+            print(f"\033[92mArchiving current manifold to: {archive_name}\033[0m")
+            print(f"\033[96mSymbolic Link Established to Hash: {short_hash}...\033[0m")
+            
+            # Save current chain before surgery
+            self.save_to_file(archive_name)
+            
+            # Reset the chain but keep the reference
+            self.parent_chain = archive_name
+            self.chain = []
+            self.create_genesis_block()
+            
+            # Clamp the difficulty for the new genesis transition
+            raw_difficulty = SETTINGS["max_difficulty_clamp"]
+            surgery_info = {
+                "performed": True, 
+                "archive_name": archive_name,
+                "parent_hash": parent_hash,
+                "new_active_name": f"manifold_{short_hash}_active.json"
+            }
+            
+        # Clamp difficulty for standard mining
+        clamped_difficulty = min(raw_difficulty, SETTINGS["max_difficulty_clamp"])
+        
         new_block = Block(
             index=len(self.chain),
             data=block_data,
-            previous_hash=self.get_latest_block().hash
+            previous_hash=self.get_latest_block().hash,
+            difficulty=clamped_difficulty,
+            parent_chain=self.parent_chain
         )
         
         # Mine the block
-        new_block.mine_block(self.difficulty)
+        new_block.mine_block()
         
         # Add to chain
         self.chain.append(new_block)
@@ -107,7 +182,10 @@ class Blockchain:
         # Clear pending data
         self.pending_data = []
         
-        return new_block
+        return {
+            "block": new_block,
+            "surgery": surgery_info
+        }
     
     def is_chain_valid(self) -> bool:
         """Validate the entire blockchain."""

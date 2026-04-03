@@ -1,0 +1,9 @@
+{
+  "base_difficulty": 2,
+  "max_difficulty_clamp": 6,
+  "surgery_threshold": 7,
+  "temperature_threshold": 1.0,
+  "gaussian_well_depth": 0.8,
+  "ledger_prefix": "ledgers/chain_",
+  "metadata_context_size": 5
+}
