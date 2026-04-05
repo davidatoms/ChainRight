@@ -1,153 +1,178 @@
-# Claude CLI with Blockchain Hashing
+# CLI Guide
 
-This project provides an interactive command line interface that demonstrates how conversations with Claude can be hashed and stored on a blockchain for immutability and transparency.
+ChainRight ships four CLI commands. This guide covers what each one does and how to use it effectively.
 
-## Features
+---
 
-- **Real-time Hashing**: Every user input and Claude response is hashed using SHA-256
-- **Blockchain Storage**: All conversation data is stored in a blockchain with proof-of-work mining
-- **Interactive CLI**: Command-line interface for real-time conversation
-- **Visual Hash Display**: See exactly how your messages and Claude's responses are being hashed
-- **Blockchain Validation**: Verify the integrity of the conversation chain
-- **Session Management**: Each conversation session gets a unique ID
-- **Save/Load**: Persist conversations to JSON files
+## `chainright-cli` — Claude with blockchain hashing
 
-## How It Works
+The primary interactive CLI. Every message you type and every Claude response is SHA-256 hashed and mined into a block before the next exchange begins.
 
-1. **User Input Hashing**: When you type a message, it's immediately hashed using SHA-256
-2. **Block Creation**: The hashed message is added to a new block in the blockchain
-3. **Proof of Work**: The block is mined with a configurable difficulty level
-4. **Claude Response**: Claude's response is similarly hashed and added to the blockchain
-5. **Chain Validation**: The entire conversation chain is validated for integrity
-
-## Installation
-
-Make sure you have Python 3.7+ installed and the required dependencies:
+### Start a session
 
 ```bash
-# The project uses only standard library modules
-# No additional installation required
+chainright-cli
 ```
 
-## Usage
+You'll see your session ID and the genesis block hash printed at startup. Type any message and press Enter to begin.
 
-### Interactive Mode
+### What happens per exchange
 
-Run the interactive CLI:
+1. Your input is hashed: `sha256(your_message)` → stored in block metadata
+2. The message is sent to the Claude API with full conversation context (last 5 messages)
+3. Claude's response is hashed: `sha256(response)`
+4. Both hashes are mined into a new block with proof-of-work
+5. Block index, hash, and mining time are printed
+
+### In-session commands
+
+| Command | Description |
+|---------|-------------|
+| `/help` | Show available commands |
+| `/stats` | Print chain length, valid status, unique users |
+| `/verify` | Re-validate the entire chain |
+| `/search <keyword>` | Search conversation history |
+| `/my-conversations` | Show your messages only |
+| `/save` | Save the ledger to disk |
+| `/exit` | End the session |
+
+### Example session
+
+```
+You: What is entropy in information theory?
+
+[Block #3 mined] Hash: a3f7c2... | Nonce: 142 | Time: 0.4s
+
+Claude: Entropy in information theory, introduced by Claude Shannon,
+measures the average amount of information produced by a random source...
+
+Your input hash:  8d3f9a2b...
+Response hash:    c741e05f...
+```
+
+---
+
+## `chainright-multi` — Multi-provider CLI
+
+Same blockchain behavior as `chainright-cli`, but lets you select from multiple AI providers at startup.
+
+### Supported providers
+
+| Provider | Models available |
+|----------|-----------------|
+| Anthropic | claude-3-5-sonnet, claude-3-opus, claude-3-haiku |
+| Google | gemini-1.5-pro, gemini-1.5-flash |
+| OpenAI | gpt-4o, gpt-4-turbo, gpt-3.5-turbo |
+| Groq | llama-3.1-70b, mixtral-8x7b |
+| Mistral | mistral-large, mistral-medium |
+| DeepSeek | deepseek-chat, deepseek-coder |
+
+### Configuration
+
+Provider settings live in `config/providers.json`. Set the corresponding API key in `.env`:
+
+```
+ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_API_KEY=...
+OPENAI_API_KEY=sk-...
+GROQ_API_KEY=...
+MISTRAL_API_KEY=...
+DEEPSEEK_API_KEY=...
+```
+
+### Start with a specific provider
 
 ```bash
-python claude_cli.py
+chainright-multi
+# → Prompts you to select a provider and model
 ```
 
-This will start an interactive session where you can:
-- Type messages and see them hashed in real-time
-- View Claude's responses and their hashes
-- Use commands to manage the blockchain
+All conversations are recorded to the same ledger regardless of which provider you use. The block metadata includes `provider` and `model` fields so you can tell which AI generated each response.
 
-### Demo Mode
+---
 
-Run the automated demo to see the system in action:
+## `chainright-demo` — Global conversation blockchain CLI
+
+A full-featured CLI for the shared global ledger. Multiple users can connect to the same ledger file, and every message is permanently attributed to its author.
+
+### Start the demo
 
 ```bash
-python demo_claude_cli.py
+chainright-demo
 ```
 
-This demonstrates the full conversation flow with sample messages.
+### Commands
 
-## CLI Commands
+| Command | Description |
+|---------|-------------|
+| `/stats` | Chain length, unique users, total messages |
+| `/verify` | Validate chain integrity |
+| `/search <keyword>` | Full-text search across all blocks |
+| `/my-conversations` | Filter to your user ID only |
+| `/save` | Persist ledger to disk |
+| `/exit` | Quit |
 
-When in interactive mode, you can use these commands:
+### Sharing a ledger between users
 
-- `/status` - Show current blockchain status
-- `/chain` - Display the full blockchain
-- `/save <filename>` - Save the blockchain to a JSON file
-- `/load <filename>` - Load a blockchain from a JSON file
-- `/quit` or `/exit` - Exit the program
+Point multiple users at the same `.json` ledger file by setting `CHAINRIGHT_LEDGER` in their environment:
 
-## Example Output
-
-```
-You: Hello Claude, how does blockchain hashing work?
-
-============================================================
-USER INPUT HASHING INFO:
-============================================================
-Text: Hello Claude, how does blockchain hashing work?
-SHA-256 Hash: bca9d47471492f05989a6ec9e5bca4c0c88a2425905c1019b26e0f83d1d2643c
-Hash Length: 64 characters
-Block Index: 1
-Block Hash: 002fbc548492eae7a6ab757b6891bc5c57bec85e483595b800b9f24104481ae2
-Nonce: 383
-Mining Difficulty: 2
-Timestamp: 2025-08-13 14:58:01.335711
-============================================================
-
-Claude: Thank you for your input: 'Hello Claude, how does blockchain hashing work?'. The hash you see below proves this conversation is immutable.
-
-============================================================
-CLAUDE RESPONSE HASHING INFO:
-============================================================
-Text: Thank you for your input: 'Hello Claude, how does blockchain hashing work?'. The hash you see below proves this conversation is immutable.
-SHA-256 Hash: 2010b4ac7587794e085a44f2071622d49319de245e49ebfe20b790c92d6e3ec2
-Hash Length: 64 characters
-Block Index: 2
-Block Hash: 0081bf31628fd8b440fae76d378e83f895d3563129474f6e968199a33384f5e9
-Nonce: 218
-Mining Difficulty: 2
-Timestamp: 2025-08-13 14:58:01.340858
-============================================================
+```bash
+CHAINRIGHT_LEDGER=/shared/drive/ledger.json chainright-demo
 ```
 
-## Technical Details
+Each user sets their own `user_id` at startup. The chain records all contributions in order.
 
-### Hashing Algorithm
-- Uses SHA-256 for all text hashing
-- 64-character hexadecimal output
-- Deterministic (same input always produces same hash)
+---
 
-### Blockchain Implementation
-- Proof-of-work mining with configurable difficulty
-- Each block contains conversation data, timestamp, and session ID
-- Chain validation ensures integrity
-- Genesis block starts the chain
+## `chainright-train` — Export your conversation history
 
-### Data Structure
-Each block contains:
+Extracts your messages from the global ledger and exports them as a structured training dataset.
+
+### Start the trainer
+
+```bash
+chainright-train
+```
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `load <file>` | Load a ledger JSON file |
+| `stats` | Show your message count, word count, date range |
+| `export-openai` | Export as OpenAI fine-tuning JSONL |
+| `export-jsonl` | Export as generic JSONL |
+| `export-csv` | Export as CSV |
+| `export-knowledge` | Export as a knowledge base JSON |
+| `insights` | Show communication patterns and topic analysis |
+| `exit` | Quit |
+
+### Export formats
+
+**OpenAI fine-tuning format** (`export-openai`):
+```json
+{"messages": [
+  {"role": "user", "content": "What is proof-of-work?"},
+  {"role": "assistant", "content": "Proof-of-work is..."}
+]}
+```
+
+**Knowledge base format** (`export-knowledge`):
 ```json
 {
-  "type": "user_input|claude_response",
-  "content": "actual message content",
-  "timestamp": "ISO format timestamp",
-  "session_id": "unique session identifier"
+  "user_id": "alice",
+  "total_messages": 42,
+  "conversations": [...],
+  "topics": ["blockchain", "AI", "cryptography"]
 }
 ```
 
-## Files
+---
 
-- `claude_cli.py` - Main interactive CLI application
-- `demo_claude_cli.py` - Automated demo script
-- `blockchain.py` - Core blockchain implementation
-- `README_Claude_CLI.md` - This documentation
+## Environment variables
 
-## Security Features
-
-- **Immutability**: Once added to the blockchain, conversation data cannot be altered
-- **Integrity Verification**: Chain validation ensures no tampering
-- **Cryptographic Hashing**: SHA-256 provides collision resistance
-- **Proof of Work**: Mining difficulty prevents spam and ensures work was done
-
-## Future Enhancements
-
-- Integration with real Claude API
-- Web interface for visualization
-- Multiple conversation threads
-- Advanced blockchain features (smart contracts, etc.)
-- Export to different formats
-- Real-time collaboration features
-
-## Notes
-
-- This is a demonstration system using simulated Claude responses
-- In production, you would integrate with the actual Claude API
-- Mining difficulty is set low (2) for demonstration purposes
-- All data is stored locally in JSON format
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ANTHROPIC_API_KEY` | — | Required for `chainright-cli` |
+| `CHAINRIGHT_LEDGER` | `ledger.json` | Path to the shared ledger file |
+| `CHAINRIGHT_USER_ID` | prompted | Your user identity in the chain |
