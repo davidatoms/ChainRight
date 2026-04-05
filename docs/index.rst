@@ -14,8 +14,8 @@ transforming transient interactions into verifiable Knowledge Assets on a blockc
    :maxdepth: 2
    :caption: Guides
 
-   guides/ownership
    guides/claude-cli
+   guides/ownership
    guides/real-api
    guides/research
 

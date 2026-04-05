@@ -1,211 +1,159 @@
-# Claude CLI with Real API Integration
+# Training Data Export
 
-This version of the Claude CLI uses the **real Claude API** via curl commands to get actual responses from Claude, while still maintaining all the blockchain hashing functionality.
+ChainRight's `PersonalAITrainer` and `AITrainingDataset` classes transform your conversation history into structured datasets you can use to fine-tune a custom AI model.
 
-## Features
+---
 
-- **Real Claude API**: Uses actual Claude API calls instead of simulated responses
-- **Conversation Context**: Maintains conversation history for context-aware responses
-- **Blockchain Hashing**: Every real message and response is hashed and stored
-- **API Key Management**: Secure API key handling with environment variables
-- **Error Handling**: Robust error handling for API calls and network issues
+## Overview
 
-## Quick Start
+Every conversation you have through ChainRight is stored in the global ledger. The training tools let you:
 
-### 1. Get Your Claude API Key
+- Extract conversations attributed to a specific user
+- Analyze your communication patterns
+- Export data in formats accepted by OpenAI, Hugging Face, and other fine-tuning platforms
 
-1. Go to [Anthropic Console](https://console.anthropic.com/)
-2. Sign up or log in
-3. Create a new API key
-4. Copy the key (it starts with `sk-ant-`)
+---
 
-### 2. Set Up the Environment
+## `PersonalAITrainer` — your conversations only
 
-**Option A: Use the setup script (recommended)**
-```bash
-./setup_claude_api.sh
-```
+`PersonalAITrainer` filters the global ledger to a single user's history and prepares it for training.
 
-**Option B: Manual setup**
-```bash
-# Set API key for current session
-export CLAUDE_API_KEY='sk-ant-your-api-key-here'
-
-# Or add to your shell profile permanently
-echo 'export CLAUDE_API_KEY="sk-ant-your-api-key-here"' >> ~/.bashrc
-source ~/.bashrc
-```
-
-### 3. Test the API
-
-```bash
-python3 test_claude_api.py
-```
-
-### 4. Run the Real CLI
-
-```bash
-python3 claude_cli_real.py
-```
-
-## How It Works
-
-### API Integration
-- Uses `curl` commands to call the Claude API
-- Sends conversation context for better responses
-- Handles API errors gracefully
-- Supports conversation continuity
-
-### Blockchain Storage
-- Every user message is hashed and stored in a block
-- Every Claude response is hashed and stored in a block
-- Complete conversation history is preserved
-- Immutable record of all interactions
-
-### Conversation Context
-- Maintains last 10 exchanges for context
-- Claude can reference previous conversation
-- Context is cleared with `/clear` command
-
-## API Configuration
-
-### Model Selection
-Default model: `claude-3-5-sonnet-20241022`
-
-You can change this in the code:
 ```python
-cli = ClaudeCLIReal(difficulty=2, api_key=api_key, model="claude-3-haiku-20240307")
+from chainright import PersonalAITrainer
+
+trainer = PersonalAITrainer(user_id="alice")
+trainer.load_from_ledger("ledger.json")
+
+# See what you have
+stats = trainer.get_stats()
+print(stats)
+# {
+#   'total_messages': 84,
+#   'total_words': 12450,
+#   'avg_message_length': 148,
+#   'date_range': {'first': '2024-01-15', 'last': '2024-03-20'},
+#   'estimated_dataset_size_mb': 0.9
+# }
 ```
 
-### Available Models
-- `claude-3-5-sonnet-20241022` (default, most capable)
-- `claude-3-5-haiku-20241022` (fastest, most affordable)
-- `claude-3-opus-20240229` (most capable, most expensive)
+### Export as OpenAI fine-tuning JSONL
 
-### Token Limits
-- Default max tokens: 1000 per response
-- Adjustable in the `call_claude_api` method
-- Unlimited tokens available with your account
-
-## Commands
-
-- `/status` - Show blockchain and API status
-- `/chain` - Display full blockchain with conversation data
-- `/save <filename>` - Save blockchain to JSON file
-- `/load <filename>` - Load blockchain from JSON file
-- `/clear` - Clear conversation context (Claude will forget previous conversation)
-- `/quit` or `/exit` - Exit the program
-
-## Example Session
-
-```
-Claude CLI with Blockchain Hashing - Real API Version
-============================================================
-Type your messages to interact with Claude.
-Each message and response will be hashed and added to the blockchain.
-
-You: Hello Claude, can you explain blockchain technology?
-
-Processing your input...
-============================================================
-USER INPUT HASHING INFO:
-============================================================
-Text: Hello Claude, can you explain blockchain technology?
-SHA-256 Hash: a1b2c3d4e5f6...
-Hash Length: 64 characters
-Block Index: 1
-Block Hash: 00abc123...
-Nonce: 42
-Mining Difficulty: 2
-Timestamp: 2025-08-13 15:30:00
-============================================================
-
-Calling Claude API...
-
-============================================================
-CLAUDE RESPONSE HASHING INFO:
-============================================================
-Text: Blockchain is a distributed ledger technology that...
-SHA-256 Hash: f6e5d4c3b2a1...
-Hash Length: 64 characters
-Block Index: 2
-Block Hash: 00def456...
-Nonce: 123
-Mining Difficulty: 2
-Timestamp: 2025-08-13 15:30:05
-============================================================
-
-Claude: Blockchain is a distributed ledger technology that...
-```
-
-## Error Handling
-
-The system handles various API errors:
-
-- **No API Key**: Prompts for key or shows error
-- **Network Timeout**: 30-second timeout with retry option
-- **Invalid Response**: Graceful error display
-- **Rate Limiting**: Automatic retry with backoff
-- **Authentication Errors**: Clear error messages
-
-## Security
-
-- API key is stored in environment variables only
-- No API key is saved to files
-- All communication uses HTTPS
-- Blockchain provides immutable audit trail
-
-## Cost Considerations
-
-With unlimited tokens, you can:
-- Have long conversations without worrying about limits
-- Use the most capable models (Claude 3.5 Sonnet)
-- Generate detailed responses
-- Maintain extensive conversation context
-
-## Troubleshooting
-
-### Common Issues
-
-1. **"No API key configured"**
-   - Set `CLAUDE_API_KEY` environment variable
-   - Run `./setup_claude_api.sh`
-
-2. **"API call timed out"**
-   - Check internet connection
-   - Try again (temporary network issue)
-
-3. **"Invalid JSON response"**
-   - Check API key validity
-   - Verify account has credits/tokens
-
-4. **"curl not found"**
-   - Install curl: `brew install curl` (macOS) or `sudo apt install curl` (Ubuntu)
-
-### Debug Mode
-
-To see detailed API calls, modify the curl command in `claude_cli_real.py`:
 ```python
-curl_command = [
-    "curl", "-v", "-X", "POST", "https://api.anthropic.com/v1/messages",
-    # ... rest of command
-]
+trainer.export_openai_format("alice_finetune.jsonl")
 ```
 
-## Files
+Each line of the output file is one training example:
 
-- `claude_cli_real.py` - Main CLI with real API integration
-- `test_claude_api.py` - API connection test
-- `setup_claude_api.sh` - Automated setup script
-- `blockchain.py` - Core blockchain implementation
-- `README_Real_API.md` - This documentation
+```json
+{"messages": [
+  {"role": "system", "content": "You are a helpful assistant."},
+  {"role": "user", "content": "Explain hashing in simple terms."},
+  {"role": "assistant", "content": "Hashing takes any input and produces a fixed-length fingerprint..."}
+]}
+```
 
-## Next Steps
+This format is accepted directly by the OpenAI fine-tuning API and most Hugging Face trainers.
 
-1. Run the setup script: `./setup_claude_api.sh`
-2. Test the API: `python3 test_claude_api.py`
-3. Start chatting: `python3 claude_cli_real.py`
-4. Explore the blockchain: Use `/chain` and `/status` commands
-5. Save conversations: Use `/save conversation.json`
+### Export other formats
 
-Enjoy your unlimited token conversations with Claude, all securely hashed and stored on the blockchain!
+```python
+# Generic JSONL (one conversation pair per line)
+trainer.export_jsonl("alice_data.jsonl")
+
+# CSV (prompt, response, timestamp columns)
+trainer.export_csv("alice_data.csv")
+
+# Structured knowledge base
+trainer.export_knowledge_base("alice_knowledge.json")
+```
+
+### Analyze communication patterns
+
+```python
+insights = trainer.get_insights()
+# Returns:
+# - Most common topics/keywords
+# - Peak conversation hours
+# - Average response length
+# - Knowledge gaps (questions without detailed responses)
+# - Learning progression over time
+```
+
+---
+
+## `AITrainingDataset` — the full global ledger
+
+`AITrainingDataset` works on the entire ledger across all users. Use this when you want to train on aggregate conversation data.
+
+```python
+from chainright import AITrainingDataset
+
+dataset = AITrainingDataset()
+dataset.load_from_ledger("ledger.json")
+
+stats = dataset.get_stats()
+# {
+#   'total_conversations': 312,
+#   'unique_users': 8,
+#   'unique_sessions': 45,
+#   'total_words': 89200
+# }
+
+# Export everything
+dataset.export_openai_format("full_dataset.jsonl")
+
+# Export for a single user only
+dataset.export_openai_format("alice_only.jsonl", filter_user="alice")
+```
+
+---
+
+## CLI workflow
+
+```bash
+chainright-train
+```
+
+```
+> load ledger.json
+Loaded 84 conversations for user 'alice'
+
+> stats
+Total messages:  84
+Total words:     12,450
+Date range:      2024-01-15 → 2024-03-20
+Est. size:       0.9 MB
+
+> insights
+Top topics: blockchain (23), cryptography (18), AI training (15)
+Peak hours: 9am–11am, 3pm–5pm
+
+> export-openai
+Exported 84 examples to alice_finetune.jsonl
+
+> exit
+```
+
+---
+
+## Fine-tuning workflow (OpenAI example)
+
+Once you have your `.jsonl` file:
+
+```bash
+# Validate the file
+openai tools fine_tunes.prepare_data -f alice_finetune.jsonl
+
+# Upload and start training
+openai api fine_tunes.create \
+  -t alice_finetune.jsonl \
+  -m gpt-3.5-turbo
+```
+
+---
+
+## Notes on data quality
+
+- Short exchanges (under 20 words) are included but may add noise. Filter them with `trainer.filter_min_length(20)` if needed.
+- The ledger stores hashes alongside text. Exported datasets contain only the plain text — hashes are metadata and are not included in training examples.
+- All timestamps are UTC.
