@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
 from dotenv import load_dotenv
@@ -117,7 +117,7 @@ class LLMCli:
             "model": self.model_config["id"],
             "content": content,
             "session_id": self.session_id,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
         self.blockchain.add_data(json.dumps(entry))
         return self.blockchain.mine_pending_data()

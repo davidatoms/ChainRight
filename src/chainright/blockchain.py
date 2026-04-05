@@ -250,7 +250,7 @@ class Blockchain:
             json.dump({
                 'chain': self.get_chain(),
                 'pending_data': self.pending_data,
-                'difficulty': self.difficulty
+                'difficulty': self.base_difficulty
             }, f, indent=2)
     
     @classmethod

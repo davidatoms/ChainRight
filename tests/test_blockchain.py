@@ -1,101 +1,199 @@
-#!/usr/bin/env python3
 """
-Simple test script to demonstrate blockchain functionality.
+Tests for core blockchain functionality.
 """
 
-from src.chainright.blockchain import Blockchain, create_string_blockchain
+import json
+import os
+import tempfile
+
+import pytest
+
+from chainright.blockchain import Block, Blockchain, create_string_blockchain
 
 
-def test_basic_functionality():
-    """Test basic blockchain functionality."""
-    print("Testing Basic Blockchain Functionality")
-    print("=" * 40)
-    
-    # Test 1: Create blockchain with input string
-    input_string = "My important data that needs to be stored securely"
-    print(f"Input string: '{input_string}'")
-    
-    blockchain = create_string_blockchain(input_string, difficulty=2)
-    print(f"Blockchain created with {len(blockchain.chain)} blocks")
-    print(f"Chain valid: {blockchain.is_chain_valid()}")
-    
-    # Test 2: Add more data
-    print("\nAdding more data...")
-    blockchain.add_data("Additional data point 1")
-    blockchain.add_data("Additional data point 2")
-    blockchain.mine_pending_data()
-    
-    print(f"Chain length after adding data: {len(blockchain.chain)}")
-    print(f"Chain still valid: {blockchain.is_chain_valid()}")
-    
-    # Test 3: Display chain structure
-    print("\nBlockchain Structure:")
-    for i, block in enumerate(blockchain.chain):
-        print(f"\nBlock {i}:")
-        print(f"  Index: {block.index}")
-        print(f"  Data: {block.data}")
-        print(f"  Hash: {block.hash}")
-        print(f"  Previous Hash: {block.previous_hash}")
-        print(f"  Nonce: {block.nonce}")
-    
-    return blockchain
+# ---------------------------------------------------------------------------
+# Block
+# ---------------------------------------------------------------------------
+
+class TestBlock:
+    def test_hash_is_deterministic(self):
+        b = Block(index=0, data="hello", previous_hash="0", timestamp=1000.0, difficulty=1)
+        assert b.calculate_hash() == b.hash
+
+    def test_hash_changes_with_nonce(self):
+        b = Block(index=0, data="hello", previous_hash="0", timestamp=1000.0, difficulty=1)
+        original = b.hash
+        b.nonce += 1
+        b.hash = b.calculate_hash()
+        assert b.hash != original
+
+    def test_mine_block_satisfies_difficulty(self):
+        b = Block(index=1, data="data", previous_hash="abc", timestamp=1000.0, difficulty=2)
+        b.mine_block(difficulty=2)
+        assert b.hash.startswith("00")
+
+    def test_to_dict_roundtrip(self):
+        b = Block(index=1, data="roundtrip", previous_hash="abc", timestamp=1000.0, difficulty=1)
+        d = b.to_dict()
+        restored = Block.from_dict(d)
+        assert restored.index == b.index
+        assert restored.data == b.data
+        assert restored.hash == b.hash
+        assert restored.nonce == b.nonce
 
 
-def test_validation():
-    """Test blockchain validation."""
-    print("\n\nTesting Blockchain Validation")
-    print("=" * 35)
-    
-    # Create a valid blockchain
-    blockchain = Blockchain(difficulty=1)
-    blockchain.add_data("Test data 1")
-    blockchain.mine_pending_data()
-    blockchain.add_data("Test data 2")
-    blockchain.mine_pending_data()
-    
-    print(f"Original chain valid: {blockchain.is_chain_valid()}")
-    
-    # Try to tamper with the data (this should make it invalid)
-    if len(blockchain.chain) > 1:
-        # Modify the data in the second block
-        blockchain.chain[1].data = "Tampered data"
-        print(f"After tampering, chain valid: {blockchain.is_chain_valid()}")
-    
-    return blockchain
+# ---------------------------------------------------------------------------
+# Blockchain
+# ---------------------------------------------------------------------------
+
+class TestBlockchain:
+    def test_genesis_block_created_on_init(self):
+        bc = Blockchain(difficulty=1)
+        assert len(bc.chain) == 1
+        assert bc.chain[0].index == 0
+
+    def test_is_chain_valid_after_init(self):
+        bc = Blockchain(difficulty=1)
+        assert bc.is_chain_valid()
+
+    def test_mine_adds_block(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("test data")
+        result = bc.mine_pending_data()
+        assert len(bc.chain) == 2
+        assert isinstance(result, dict)
+        assert "block" in result
+
+    def test_pending_data_cleared_after_mine(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("a")
+        bc.add_data("b")
+        bc.mine_pending_data()
+        assert bc.pending_data == []
+
+    def test_mine_with_no_pending_raises(self):
+        bc = Blockchain(difficulty=1)
+        with pytest.raises(ValueError):
+            bc.mine_pending_data()
+
+    def test_chain_valid_after_multiple_blocks(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("block 1")
+        bc.mine_pending_data()
+        bc.add_data("block 2")
+        bc.mine_pending_data()
+        assert bc.is_chain_valid()
+        assert len(bc.chain) == 3  # genesis + 2 mined
+
+    def test_tampered_data_invalidates_chain(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("legit data")
+        bc.mine_pending_data()
+        # Tamper with block 1
+        bc.chain[1].data = "tampered"
+        assert not bc.is_chain_valid()
+
+    def test_tampered_hash_invalidates_chain(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("legit data")
+        bc.mine_pending_data()
+        bc.chain[1].hash = "0" * 64
+        assert not bc.is_chain_valid()
+
+    def test_get_block_by_index(self):
+        bc = Blockchain(difficulty=1)
+        block = bc.get_block_by_index(0)
+        assert block.index == 0
+
+    def test_get_block_by_index_out_of_range(self):
+        bc = Blockchain(difficulty=1)
+        with pytest.raises(IndexError):
+            bc.get_block_by_index(99)
+
+    def test_get_block_by_hash(self):
+        bc = Blockchain(difficulty=1)
+        genesis_hash = bc.chain[0].hash
+        block = bc.get_block_by_hash(genesis_hash)
+        assert block.index == 0
+
+    def test_get_block_by_hash_not_found(self):
+        bc = Blockchain(difficulty=1)
+        with pytest.raises(ValueError):
+            bc.get_block_by_hash("nonexistent")
+
+    def test_get_chain_returns_list_of_dicts(self):
+        bc = Blockchain(difficulty=1)
+        chain = bc.get_chain()
+        assert isinstance(chain, list)
+        assert isinstance(chain[0], dict)
+        assert "hash" in chain[0]
+
+    def test_get_latest_block(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("latest")
+        bc.mine_pending_data()
+        latest = bc.get_latest_block()
+        assert latest.index == 1
 
 
-def test_persistence():
-    """Test saving and loading blockchain."""
-    print("\n\nTesting Persistence")
-    print("=" * 20)
-    
-    # Create blockchain
-    blockchain = Blockchain(difficulty=2)
-    blockchain.add_data("Persistent data 1")
-    blockchain.add_data("Persistent data 2")
-    blockchain.mine_pending_data()
-    
-    # Save to file
-    filename = "test_blockchain.json"
-    blockchain.save_to_file(filename)
-    print(f"Blockchain saved to {filename}")
-    
-    # Load from file
-    loaded_blockchain = Blockchain.load_from_file(filename)
-    print(f"Blockchain loaded from {filename}")
-    print(f"Loaded chain valid: {loaded_blockchain.is_chain_valid()}")
-    print(f"Loaded chain length: {len(loaded_blockchain.chain)}")
-    
-    return loaded_blockchain
+# ---------------------------------------------------------------------------
+# Persistence
+# ---------------------------------------------------------------------------
+
+class TestPersistence:
+    def test_save_and_load(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("persist me")
+        bc.mine_pending_data()
+
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f:
+            fname = f.name
+
+        try:
+            bc.save_to_file(fname)
+            loaded = Blockchain.load_from_file(fname)
+            assert loaded.is_chain_valid()
+            assert len(loaded.chain) == len(bc.chain)
+            assert loaded.chain[-1].hash == bc.chain[-1].hash
+        finally:
+            os.unlink(fname)
+
+    def test_save_file_is_valid_json(self):
+        bc = Blockchain(difficulty=1)
+        bc.add_data("json test")
+        bc.mine_pending_data()
+
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False, mode="w") as f:
+            fname = f.name
+
+        try:
+            bc.save_to_file(fname)
+            with open(fname) as f:
+                data = json.load(f)
+            assert "chain" in data
+            assert "difficulty" in data
+            assert "pending_data" in data
+        finally:
+            os.unlink(fname)
 
 
-if __name__ == "__main__":
-    print("Blockchain Test Suite")
-    print("=" * 50)
-    
-    # Run all tests
-    test_basic_functionality()
-    test_validation()
-    test_persistence()
-    
-    print("\n\nAll tests completed!")
+# ---------------------------------------------------------------------------
+# create_string_blockchain helper
+# ---------------------------------------------------------------------------
+
+class TestCreateStringBlockchain:
+    def test_returns_valid_blockchain(self):
+        bc = create_string_blockchain("hello world", difficulty=1)
+        assert bc.is_chain_valid()
+
+    def test_chain_contains_input_string(self):
+        text = "unique test string 12345"
+        bc = create_string_blockchain(text, difficulty=1)
+        # The string is stored inside the mined block's data JSON
+        chain_json = json.dumps(bc.get_chain())
+        assert text in chain_json
+
+    def test_chain_has_two_blocks(self):
+        bc = create_string_blockchain("data", difficulty=1)
+        # genesis + 1 mined block
+        assert len(bc.chain) == 2
