@@ -1,5 +1,11 @@
 # ChainRight: The Relativistic Conversation Blockchain
 
+[![CI](https://github.com/davidatoms/ChainRight/actions/workflows/ci.yml/badge.svg)](https://github.com/davidatoms/ChainRight/actions/workflows/ci.yml)
+[![PyPI version](https://badge.fury.io/py/chainright.svg)](https://pypi.org/project/chainright/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://davidatoms.github.io/ChainRight)
+
 **ChainRight** is a decentralized engine designed to transform transient AI interactions into immutable, attributed, and verifiable "Knowledge Assets." 
 
 By treating every conversation as a trajectory through a semantic manifold, ChainRight uses relativistic metrics to determine the "computational effort" required to preserve a thought. It is the first blockchain system where the mining difficulty is a direct function of the **cognitive complexity** of the data being recorded.
