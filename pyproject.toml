@@ -49,10 +49,10 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/davidadams/chainright"
-Documentation = "https://chainright.readthedocs.io"
-Repository = "https://github.com/davidadams/chainright"
-Issues = "https://github.com/davidadams/chainright/issues"
+Homepage = "https://github.com/davidatoms/ChainRight"
+Documentation = "https://davidatoms.github.io/ChainRight"
+Repository = "https://github.com/davidatoms/ChainRight"
+Issues = "https://github.com/davidatoms/ChainRight/issues"
 
 [project.scripts]
 chainright-cli = "chainright.claude_cli_real:main"
