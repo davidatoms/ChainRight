@@ -56,6 +56,7 @@ Issues = "https://github.com/davidatoms/ChainRight/issues"
 
 [project.scripts]
 chainright-cli = "chainright.claude_cli_real:main"
+chainright-llm = "chainright.llm_cli:main"
 chainright-demo = "chainright.global_conversation_blockchain:main"
 chainright-train = "chainright.personal_ai_trainer:main"
 chainright-multi = "chainright.multi_provider_cli:main"

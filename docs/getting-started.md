@@ -92,15 +92,18 @@ Four commands are installed automatically:
 
 | Command | What it does |
 |---------|-------------|
-| `chainright-cli` | Interactive chat with Claude — every exchange is hashed and mined |
-| `chainright-multi` | Same, but lets you choose between Claude, GPT-4, Gemini, and others |
+| `chainright-llm` | Chat with any LLM — provider and model are arguments |
+| `chainright-cli` | Claude-only shortcut for `chainright-llm --provider anthropic` |
+| `chainright-multi` | Interactive menu to pick provider and model, with `/model` mid-session |
 | `chainright-demo` | Launches the global conversation blockchain with a full CLI |
 | `chainright-train` | Extracts your conversation history and exports it as a training dataset |
 
 ### Quick start with the CLI
 
 ```bash
-chainright-cli
+# any provider
+chainright-llm --provider anthropic
+chainright-llm --provider openai --model gpt-4o
 ```
 
 Type any message and press Enter. ChainRight will:
