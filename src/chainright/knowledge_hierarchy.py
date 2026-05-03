@@ -184,12 +184,12 @@ class Paragraph:
         """Add a sentence to this paragraph."""
         sentence_index = len(self.sentences)
         
-        # Create metalocation for this sentence
-        metalocation = Metalocation(
-            **asdict(self.metalocation_base),
-            sentence_number=sentence_index
-        )
-        
+        # Create metalocation for this sentence by updating base with sentence info
+        base_dict = asdict(self.metalocation_base)
+        base_dict.update({
+            "sentence_number": sentence_index
+        })
+        metalocation = Metalocation(**base_dict)
         sentence = Sentence(text, sentence_index, metalocation)
         self.sentences.append(sentence)
         return sentence
