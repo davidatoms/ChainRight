@@ -246,13 +246,12 @@ class Section:
         """Add a paragraph to this section."""
         para_index = len(self.paragraphs)
         
-        # Create metalocation for this paragraph
-        metalocation = Metalocation(
-            **asdict(self.metalocation_base),
-            section_number=self.number,
-            section_title=self.title,
-            paragraph_number=para_index
-        )
+        # Create metalocation for this paragraph by updating base with paragraph info
+        base_dict = asdict(self.metalocation_base)
+        base_dict.update({
+            "paragraph_number": para_index
+        })
+        metalocation = Metalocation(**base_dict)
         
         paragraph = Paragraph(text, para_index, metalocation)
         self.paragraphs.append(paragraph)
@@ -303,14 +302,13 @@ class Chapter:
     
     def add_section(self, title: str, number: str) -> Section:
         """Add a section to this chapter."""
-        # Create metalocation for this section
-        metalocation = Metalocation(
-            **asdict(self.metalocation_base),
-            chapter_number=self.number,
-            chapter_title=self.title,
-            section_number=number,
-            section_title=title
-        )
+        # Create metalocation for this section by updating base with section info
+        base_dict = asdict(self.metalocation_base)
+        base_dict.update({
+            "section_number": number,
+            "section_title": title
+        })
+        metalocation = Metalocation(**base_dict)
         
         section = Section(title, number, metalocation)
         self.sections.append(section)
