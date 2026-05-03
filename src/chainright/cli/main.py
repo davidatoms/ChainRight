@@ -10,6 +10,7 @@ Provides command-line interface for ChainRight operations:
 import click
 from chainright.cli.write import write
 from chainright.cli.train import train
+from chainright.cli.genesis import genesis
 
 
 @click.group()
@@ -21,6 +22,7 @@ def cli():
     Transform your thoughts into immutable, valued knowledge assets.
     
     Examples:
+        chainright genesis init --sources ./library
         chainright write start "My debugging session"
         chainright train latest
         chainright write history --sort poe
@@ -29,6 +31,7 @@ def cli():
 
 
 # Add subcommand groups
+cli.add_command(genesis)
 cli.add_command(write)
 cli.add_command(train)
 

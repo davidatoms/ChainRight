@@ -14,6 +14,11 @@ from .global_conversation_blockchain import GlobalConversationBlockchain
 from .personal_ai_trainer import PersonalAITrainer
 from .ai_training_dataset import AITrainingDataset
 from .ownership_blockchain import OwnershipBlockchain, OwnedSentence, OwnershipBlock
+from .knowledge_hierarchy import (
+    Concept, Sentence, Paragraph, Section, Chapter, Book,
+    KnowledgeHierarchy, Metalocation
+)
+from .genesis_builder import GenesisBuilder
 
 __all__ = [
     "Block",
@@ -24,5 +29,14 @@ __all__ = [
     "AITrainingDataset",
     "OwnershipBlockchain",
     "OwnedSentence", 
-    "OwnershipBlock"
+    "OwnershipBlock",
+    "Concept",
+    "Sentence",
+    "Paragraph",
+    "Section",
+    "Chapter",
+    "Book",
+    "KnowledgeHierarchy",
+    "Metalocation",
+    "GenesisBuilder"
 ]
