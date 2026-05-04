@@ -1,0 +1,54 @@
+{
+  "books": [
+    {
+      "id": "2079fbbd-216c-41fa-8a5c-1ff8e2c76c8c",
+      "title": "Introduction to Algorithms",
+      "author": "Cormen, Leiserson, Rivest, Stein",
+      "isbn": "ISBN-9780262033848",
+      "year": 2009,
+      "edition": 3,
+      "chapter_count": 2,
+      "concept_count": 13,
+      "total_chars": 0,
+      "hash": "4d507534e7621def32f5205f09a5fb41c8424f09d836f2864f89b09205551f05",
+      "created_at": 1777769849.355039
+    },
+    {
+      "id": "fc60ea1a-2c58-4a10-afa5-95cce956ffa5",
+      "title": "A Fast Sorting Algorithm",
+      "author": "Unknown",
+      "isbn": "PAPER_1",
+      "year": 1961,
+      "edition": 1,
+      "chapter_count": 1,
+      "concept_count": 0,
+      "total_chars": 0,
+      "hash": "cd372fb85148700fa88095e3492d3f9f5beb43e555e5ff26d95f5a6adc36f8e6",
+      "created_at": 1777769849.355861
+    },
+    {
+      "id": "96aac719-9f7c-4a5a-970c-4d4e8350600c",
+      "title": "The Art of Computer Programming, Volume 3: Sorting and Searching",
+      "author": "Donald E. Knuth",
+      "isbn": "ISBN-9780201896831",
+      "year": 1998,
+      "edition": 2,
+      "chapter_count": 1,
+      "concept_count": 8,
+      "total_chars": 0,
+      "hash": "46d3de21c5cee6711a69e3f22d578d887c03709029e9d91f8c33db7f656ddd9e",
+      "created_at": 1777769849.35619
+    }
+  ],
+  "total_concepts": 21,
+  "statistics": {
+    "total_books": 3,
+    "total_chapters": 4,
+    "total_sections": 6,
+    "total_paragraphs": 12,
+    "total_sentences": 29,
+    "total_concepts": 21,
+    "avg_concepts_per_book": 7.0,
+    "created_at": 1777769849.354394
+  }
+}

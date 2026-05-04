@@ -19,6 +19,7 @@ from typing import Optional
 
 from chainright.genesis_builder import GenesisBuilder
 from chainright.knowledge_hierarchy import Metalocation
+from chainright.blockchain import Blockchain
 
 
 @click.group()
@@ -336,6 +337,173 @@ def status() -> None:
     click.echo(f"  Total Concepts: {stats.get('total_concepts', 0):,}")
     click.echo(f"  Avg Concepts/Book: {stats.get('avg_concepts_per_book', 0):.0f}")
     click.echo()
+
+
+@genesis.command(name="inspect-chain")
+@click.option("--chain", type=str, default="tokenizer_chain.json", help="Chain file to inspect (relative to ~/.chainright/).")
+@click.option("--json", "as_json", is_flag=True, help="Output as JSON instead of pretty-printed.")
+def inspect_chain(chain: str, as_json: bool) -> None:
+    """Inspect the genesis block of a blockchain (dataset + model metadata)."""
+    chain_path = Path.home() / ".chainright" / chain
+    
+    if not chain_path.exists():
+        click.echo(f"Error: Blockchain file not found at {chain_path}", err=True)
+        return
+    
+    blockchain = Blockchain.load_from_file(str(chain_path))
+    
+    if not blockchain.chain:
+        click.echo("Error: Blockchain is empty", err=True)
+        return
+    
+    genesis_block = blockchain.chain[0]
+    
+    # Try to parse the data as JSON (dataset + model info)
+    try:
+        genesis_data = json.loads(genesis_block.data)
+        
+        if as_json:
+            click.echo(json.dumps(genesis_data, indent=2))
+        else:
+            click.echo(f"\n=== Genesis Block (Blockchain) #{genesis_block.index} ===")
+            click.echo(f"Hash: {genesis_block.hash}")
+            click.echo(f"Timestamp: {genesis_block.timestamp}")
+            click.echo(f"Difficulty: {genesis_block.difficulty}")
+            click.echo("")
+            
+            if isinstance(genesis_data, dict):
+                if "type" in genesis_data:
+                    click.echo(f"Type: {genesis_data['type']}")
+                if "purpose" in genesis_data:
+                    click.echo(f"Purpose: {genesis_data['purpose']}")
+                if "created" in genesis_data:
+                    click.echo(f"Created: {genesis_data['created']}")
+                
+                if "dataset" in genesis_data:
+                    dataset = genesis_data["dataset"]
+                    click.echo("")
+                    click.echo("[Dataset]")
+                    click.echo(f"  Name: {dataset.get('name', 'N/A')}")
+                    click.echo(f"  Sources: {', '.join(dataset.get('sources', []))}")
+                    click.echo(f"  Total Tokens: {dataset.get('total_tokens_estimated', 0):,}")
+                    click.echo(f"  Encoding: {dataset.get('encoding', 'N/A')}")
+                
+                if "model" in genesis_data:
+                    model = genesis_data["model"]
+                    click.echo("")
+                    click.echo("[Model]")
+                    click.echo(f"  Architecture: {model.get('architecture', 'N/A')}")
+                    click.echo(f"  Vocab Size: {model.get('vocab_size', 'N/A'):,}")
+                    click.echo(f"  Hidden Size: {model.get('hidden_size', 'N/A')}")
+                    click.echo(f"  Num Layers: {model.get('num_layers', 'N/A')}")
+                    click.echo(f"  Num Heads: {model.get('num_heads', 'N/A')}")
+                    click.echo(f"  Training Steps: {model.get('training_steps', 0):,}")
+                    click.echo(f"  Learning Rate: {model.get('learning_rate', 'N/A')}")
+                    if "checkpoint_hash" in model:
+                        click.echo(f"  Checkpoint Hash: {model['checkpoint_hash']}")
+            else:
+                click.echo(json.dumps(genesis_data, indent=2))
+            click.echo()
+    
+    except json.JSONDecodeError:
+        # If not JSON, just show as plain text
+        if as_json:
+            click.echo(json.dumps({"error": "Genesis data is not JSON"}, indent=2))
+        else:
+            click.echo(f"\n=== Genesis Block (Blockchain) #{genesis_block.index} ===")
+            click.echo(f"Hash: {genesis_block.hash}")
+            click.echo(f"Data: {genesis_block.data}")
+            click.echo()
+
+
+@genesis.command(name="update-chain")
+@click.option("--chain", type=str, default="tokenizer_chain.json", help="Chain file to update (relative to ~/.chainright/).")
+@click.option("--total-tokens", type=int, help="Update total tokens in dataset.")
+@click.option("--training-steps", type=int, help="Update training steps for model.")
+@click.option("--learning-rate", type=float, help="Update learning rate for model.")
+@click.option("--source", type=str, multiple=True, help="Add a new data source (can be used multiple times).")
+@click.option("--checkpoint-hash", type=str, help="Add model checkpoint hash.")
+def update_chain(
+    chain: str,
+    total_tokens: Optional[int],
+    training_steps: Optional[int],
+    learning_rate: Optional[float],
+    source: tuple[str, ...],
+    checkpoint_hash: Optional[str]
+) -> None:
+    """Update genesis block metadata (dataset and model info).
+    
+    This creates a new blockchain with the updated genesis block.
+    Note: This replaces the genesis block, so the chain hash will change.
+    
+    Usage:
+        chainright genesis update-chain --total-tokens 1000000000
+        chainright genesis update-chain --training-steps 50000 --learning-rate 0.0001
+        chainright genesis update-chain --source "additional-dataset" --checkpoint-hash "abc123"
+    """
+    chain_path = Path.home() / ".chainright" / chain
+    
+    if not chain_path.exists():
+        click.echo(f"Error: Blockchain file not found at {chain_path}", err=True)
+        return
+    
+    blockchain = Blockchain.load_from_file(str(chain_path))
+    
+    if not blockchain.chain:
+        click.echo("Error: Blockchain is empty", err=True)
+        return
+    
+    genesis_block = blockchain.chain[0]
+    
+    # Parse current genesis data
+    try:
+        genesis_data = json.loads(genesis_block.data)
+    except json.JSONDecodeError:
+        click.echo("Error: Genesis data is not valid JSON", err=True)
+        return
+    
+    click.echo(f"\n🔄 Updating genesis block...\n")
+    
+    # Update values
+    if total_tokens is not None:
+        if "dataset" in genesis_data:
+            genesis_data["dataset"]["total_tokens_estimated"] = total_tokens
+            click.echo(f"✓ Updated total_tokens to {total_tokens:,}")
+    
+    if training_steps is not None:
+        if "model" in genesis_data:
+            genesis_data["model"]["training_steps"] = training_steps
+            click.echo(f"✓ Updated training_steps to {training_steps:,}")
+    
+    if learning_rate is not None:
+        if "model" in genesis_data:
+            genesis_data["model"]["learning_rate"] = learning_rate
+            click.echo(f"✓ Updated learning_rate to {learning_rate}")
+    
+    if source:
+        if "dataset" in genesis_data:
+            current_sources = genesis_data["dataset"].get("sources", [])
+            for new_source in source:
+                if new_source not in current_sources:
+                    current_sources.append(new_source)
+                    click.echo(f"✓ Added data source: {new_source}")
+            genesis_data["dataset"]["sources"] = current_sources
+    
+    if checkpoint_hash is not None:
+        if "model" in genesis_data:
+            genesis_data["model"]["checkpoint_hash"] = checkpoint_hash
+            click.echo(f"✓ Added checkpoint_hash: {checkpoint_hash}")
+    
+    # Serialize updated genesis data
+    updated_genesis_str = json.dumps(genesis_data)
+    
+    # Create new blockchain with updated genesis
+    new_blockchain = Blockchain(difficulty=blockchain.base_difficulty, genesis_data=updated_genesis_str)
+    
+    # Save updated blockchain
+    new_blockchain.save_to_file(str(chain_path))
+    click.echo(f"\n✓ Genesis block updated and saved to {chain_path}")
+    click.echo(f"New genesis hash: {new_blockchain.chain[0].hash}\n")
 
 
 if __name__ == "__main__":

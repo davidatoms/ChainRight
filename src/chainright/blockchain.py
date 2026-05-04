@@ -97,21 +97,27 @@ class Block:
 class Blockchain:
     """A simple blockchain implementation with Ricci Flow Surgery and Device Awareness."""
     
-    def __init__(self, difficulty: int = None, parent_chain: str = None):
+    def __init__(self, difficulty: int = None, parent_chain: str = None, genesis_data: str = None):
         self.chain: List[Block] = []
         self.base_difficulty = difficulty if difficulty is not None else SETTINGS["base_difficulty"]
         self.parent_chain = parent_chain
         self.node_type = SETTINGS["device_signature"]
         self.pending_data: List[str] = []
+        self.genesis_data_content = genesis_data  # Store for reference
         
         # Create the genesis block
-        self.create_genesis_block()
+        self.create_genesis_block(genesis_data)
     
-    def create_genesis_block(self) -> None:
-        """Create the first block in the chain."""
-        genesis_data = f"Genesis Block (Node: {self.node_type})"
-        if self.parent_chain:
-            genesis_data = f"Genesis Block (Surgery Link to {self.parent_chain})"
+    def create_genesis_block(self, genesis_data: str = None) -> None:
+        """Create the first block in the chain.
+        
+        Args:
+            genesis_data: Custom data for the genesis block. If not provided, uses default format.
+        """
+        if genesis_data is None:
+            genesis_data = f"Genesis Block (Node: {self.node_type})"
+            if self.parent_chain:
+                genesis_data = f"Genesis Block (Surgery Link to {self.parent_chain})"
             
         genesis_block = Block(0, genesis_data, "0", 
                               difficulty=self.base_difficulty,

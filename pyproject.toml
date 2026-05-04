@@ -60,6 +60,7 @@ chainright-llm = "chainright.llm_cli:main"
 chainright-demo = "chainright.global_conversation_blockchain:main"
 chainright-train = "chainright.personal_ai_trainer:main"
 chainright-multi = "chainright.multi_provider_cli:main"
+chainright = "chainright.cli.main:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]

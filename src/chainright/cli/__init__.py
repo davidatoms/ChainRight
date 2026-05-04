@@ -10,5 +10,6 @@ Subcommands for interacting with ChainRight:
 from chainright.cli.write import write
 from chainright.cli.train import train
 from chainright.cli.genesis import genesis
+from chainright.cli.tokenize import tokenize
 
-__all__ = ["genesis", "write", "train"]
+__all__ = ["genesis", "write", "train", "tokenize"]

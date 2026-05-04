@@ -1,0 +1,108 @@
+[
+  {
+    "type": "book",
+    "title": "Introduction to Algorithms",
+    "author": "Cormen, Leiserson, Rivest, Stein",
+    "isbn": "ISBN-9780262033848",
+    "year": 2009,
+    "edition": 3,
+    "chapters": {
+      "1": {
+        "title": "Foundations",
+        "sections": {
+          "1.1": {
+            "title": "Algorithms",
+            "page": 1,
+            "paragraphs": [
+              "Informally, an algorithm is any well-defined computational procedure that takes some value, or set of values, as input and produces some value, or set of values, as output. An algorithm is thus a sequence of computational steps that transform the input into the output.",
+              "An algorithm must satisfy the following properties. First, it must be correct, meaning that for each input instance, it halts with the correct output. An incorrect algorithm might not halt at all on some input instances, or it might halt with an incorrect answer."
+            ]
+          },
+          "1.2": {
+            "title": "The Role of Algorithms",
+            "page": 5,
+            "paragraphs": [
+              "Algorithms are fundamental to computer science. Properly implemented efficient algorithms are central to the process of solving large-scale problems. Moreover, with computers becoming faster and memories becoming larger, a more careful attention has to be paid on the choice of algorithms and data structures.",
+              "From a practical perspective, studying algorithms is important because so much computer science relies upon them, either directly or indirectly. You might discover that an algorithm you once thought was efficient is actually less efficient than another algorithm that you had not previously considered."
+            ]
+          }
+        }
+      },
+      "2": {
+        "title": "Getting Started",
+        "sections": {
+          "2.1": {
+            "title": "Insertion Sort",
+            "page": 16,
+            "paragraphs": [
+              "Insertion sort works the way many people sort a hand of playing cards. We start with an empty left hand and the cards face down on the table. We then remove one card at a time from the table and insert it into the correct position in the left hand.",
+              "To insert a card into the correct position in the sorted portion of our hand, we compare it against each of the cards already in our hand, from right to left, until we find the correct place. The numbers on the cards in our hand are increasing from left to right, so we can think of them as a sorted sequence of numbers."
+            ]
+          },
+          "2.2": {
+            "title": "Analyzing Algorithms",
+            "page": 23,
+            "paragraphs": [
+              "Analyzing an algorithm has come to mean predicting the resources that the algorithm requires. Occasionally, resources such as memory, communication bandwidth, or computer hardware are the bottleneck, but most often it is computational time that we want to measure.",
+              "Before we analyze an algorithm, we must have a model of the implementation technology that we will use, including a model for the resources of that technology and their costs. Our model of computation is the random-access machine (RAM) model. In the RAM model, instructions are executed one after the other, with no concurrent operations."
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "paper",
+    "title": "A Fast Sorting Algorithm",
+    "author": "C.A.R. Hoare",
+    "doi": "10.1145/366622.366644",
+    "year": 1961,
+    "abstract": "A new sorting algorithm called Quicksort is introduced.",
+    "chapters": {
+      "1": {
+        "title": "Introduction",
+        "sections": {
+          "1.1": {
+            "title": "Quicksort Algorithm",
+            "page": 10,
+            "paragraphs": [
+              "Quicksort is an efficient sorting algorithm which proceeds by partitioning the array and recursively sorting the partitions. On average, quicksort takes O(n log n) time to sort an array of n items. The key to quicksort is the partitioning process, which rearranges the array so that all items less than a given pivot value are to its left, and all items greater than the pivot value are to its right.",
+              "The efficiency of quicksort comes from the fact that partitioning can be done in place, requiring no extra space, and the partition process is very efficient in practice. Although quicksort has a worst-case time complexity of O(n²), it is usually faster in practice than other algorithms with better worst-case time complexities, such as merge sort or heap sort."
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "book",
+    "title": "The Art of Computer Programming, Volume 3: Sorting and Searching",
+    "author": "Donald E. Knuth",
+    "isbn": "ISBN-9780201896831",
+    "year": 1998,
+    "edition": 2,
+    "chapters": {
+      "5": {
+        "title": "Sorting",
+        "sections": {
+          "5.2": {
+            "title": "Sorting by Exchanging",
+            "page": 106,
+            "paragraphs": [
+              "Bubble sort is the simplest sorting algorithm. It works by repeatedly stepping through the list, comparing adjacent elements and swapping them if they are in the wrong order. The pass through the list is repeated until no swaps are needed, which indicates that the list is sorted.",
+              "Although bubble sort is simple to implement and understand, it is inefficient for large datasets because it has a time complexity of O(n²). For this reason, bubble sort is rarely used in practice, except as an educational tool or for sorting very small lists."
+            ]
+          },
+          "5.3": {
+            "title": "Sorting by Insertion",
+            "page": 80,
+            "paragraphs": [
+              "Insertion sort is a simple sorting algorithm that works by building a sorted array one item at a time. It iterates through an input array, and for each element, it finds the position where the element belongs in the sorted part of the array and inserts it there.",
+              "The advantage of insertion sort is that it is efficient for small datasets and nearly sorted arrays, and it is stable (equal elements maintain their relative order). However, for large datasets, insertion sort becomes inefficient because it has a time complexity of O(n²)."
+            ]
+          }
+        }
+      }
+    }
+  }
+]

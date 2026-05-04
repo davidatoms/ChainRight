@@ -19,6 +19,24 @@ from .knowledge_hierarchy import (
     KnowledgeHierarchy, Metalocation
 )
 from .genesis_builder import GenesisBuilder
+from .user import UserProfile
+from .use import UseEvent
+from .uses import UsesCollection
+from .pretraining import PretrainingBuilder, PretrainingRecord
+from .training import TrainingPipeline, TrainingRun
+from .posttraining import PosttrainingAnalyzer, PosttrainingReport
+from .wallet import Wallet
+from .rarity import (
+    SourceKind, RarityMetrics, compute_rarity_score, sliver_weight_for_use
+)
+from .reward_ledger import RewardEvent, BountyPool, RewardLedger
+from .tokenization import (
+    TokenizationView, TokenizationReport,
+    tokenize_characters, tokenize_whitespace,
+    tokenize_words_and_punctuation, tokenize_bytes,
+    tokenize_sentences, tokenize_tiktoken,
+    build_tokenization_report,
+)
 
 __all__ = [
     "Block",
@@ -38,5 +56,31 @@ __all__ = [
     "Book",
     "KnowledgeHierarchy",
     "Metalocation",
-    "GenesisBuilder"
+    "GenesisBuilder",
+    "UserProfile",
+    "UseEvent",
+    "UsesCollection",
+    "PretrainingBuilder",
+    "PretrainingRecord",
+    "TrainingPipeline",
+    "TrainingRun",
+    "PosttrainingAnalyzer",
+    "PosttrainingReport",
+    "Wallet",
+    "SourceKind",
+    "RarityMetrics",
+    "compute_rarity_score",
+    "sliver_weight_for_use",
+    "RewardEvent",
+    "BountyPool",
+    "RewardLedger",
+    "TokenizationView",
+    "TokenizationReport",
+    "tokenize_characters",
+    "tokenize_whitespace",
+    "tokenize_words_and_punctuation",
+    "tokenize_bytes",
+    "tokenize_sentences",
+    "tokenize_tiktoken",
+    "build_tokenization_report",
 ]
