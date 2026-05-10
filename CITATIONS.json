@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "description": "Citations referenced in ChainRight notes, reports, and code. The 'verified' field indicates whether David has personally checked the citation against its primary source. arxiv_id, doi, and url are only populated where the assistant has high confidence; everything else is blank for verification.",
+  "citations": [
+    {
+      "id": "vaswani2017attention",
+      "authors": "Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., Polosukhin, I.",
+      "year": 2017,
+      "title": "Attention Is All You Need",
+      "venue": "NeurIPS 2017 (arXiv:1706.03762)",
+      "arxiv_id": "1706.03762",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/training_vs_inference_combinatorics.md",
+        "notes/integration_versus_derivation.md"
+      ],
+      "verified": false,
+      "notes": "The original transformer paper. Cited as the architectural ancestor of GPT-2 and Sonnet."
+    },
+    {
+      "id": "kaplan2020scaling",
+      "authors": "Kaplan, J., McCandlish, S., Henighan, T., Brown, T. B., Chess, B., Child, R., Gray, S., Radford, A., Wu, J., Amodei, D.",
+      "year": 2020,
+      "title": "Scaling Laws for Neural Language Models",
+      "venue": "arXiv:2001.08361",
+      "arxiv_id": "2001.08361",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/integration_versus_derivation.md",
+        "notes/training_vs_inference_combinatorics.md"
+      ],
+      "verified": false,
+      "notes": "Original scaling-laws paper. Cited for the L = E + A/P^alpha + B/D^beta form."
+    },
+    {
+      "id": "hoffmann2022chinchilla",
+      "authors": "Hoffmann, J., Borgeaud, S., Mensch, A., et al.",
+      "year": 2022,
+      "title": "Training Compute-Optimal Large Language Models",
+      "venue": "arXiv:2203.15556 (\"Chinchilla\")",
+      "arxiv_id": "2203.15556",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/integration_versus_derivation.md",
+        "notes/training_vs_inference_combinatorics.md"
+      ],
+      "verified": false,
+      "notes": "The compute-optimal P/D ratio ~1:20. Cited for the optimal training proportion result."
+    },
+    {
+      "id": "amdahl1967validity",
+      "authors": "Amdahl, G. M.",
+      "year": 1967,
+      "title": "Validity of the single processor approach to achieving large scale computing capabilities",
+      "venue": "AFIPS Spring Joint Computer Conference, pp. 483-485",
+      "arxiv_id": null,
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "Conversation: Amdahl's law definition and audit-cost ceiling argument"
+      ],
+      "verified": false,
+      "notes": "Original Amdahl's law paper. Cited for S(n) = 1/((1-p) + p/n) and the (1-p) ceiling."
+    },
+    {
+      "id": "gustafson1988reevaluating",
+      "authors": "Gustafson, J. L.",
+      "year": 1988,
+      "title": "Reevaluating Amdahl's Law",
+      "venue": "Communications of the ACM 31(5), 532-533",
+      "arxiv_id": null,
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "Conversation: weak scaling complement to Amdahl"
+      ],
+      "verified": false,
+      "notes": "Weak-scaling counterpart to Amdahl. Cited as the dual perspective on parallel scalability."
+    },
+    {
+      "id": "pruthi2020tracin",
+      "authors": "Pruthi, G., Liu, F., Sundararajan, M., Kale, S.",
+      "year": 2020,
+      "title": "Estimating Training Data Influence by Tracing Gradient Descent",
+      "venue": "NeurIPS 2020 (arXiv:2002.08484)",
+      "arxiv_id": "2002.08484",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/data_to_output_attribution.md",
+        "reports/experimental_rig_h3.md",
+        "reports/hypotheses_to_test.md"
+      ],
+      "verified": false,
+      "notes": "TracIn / TracIn-CP paper. Cited as the influence-function attribution method used in the H3 rig."
+    },
+    {
+      "id": "koh2017influence",
+      "authors": "Koh, P. W., Liang, P.",
+      "year": 2017,
+      "title": "Understanding Black-box Predictions via Influence Functions",
+      "venue": "ICML 2017 (arXiv:1703.04730)",
+      "arxiv_id": "1703.04730",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/data_to_output_attribution.md"
+      ],
+      "verified": false,
+      "notes": "Foundational influence-function paper. Cited as the precursor to TracIn."
+    },
+    {
+      "id": "ameisen2025attribution",
+      "authors": "Ameisen, M., et al.",
+      "year": 2025,
+      "title": "Circuit Tracing: Revealing Computational Graphs in Language Models (methods)",
+      "venue": "Transformer Circuits Thread",
+      "arxiv_id": null,
+      "doi": null,
+      "url": "https://transformer-circuits.pub/2025/attribution-graphs/methods.html",
+      "mentioned_in": [
+        "notes/data_to_output_attribution.md",
+        "reports/starter_report.md",
+        "circuit-tracer README"
+      ],
+      "verified": false,
+      "notes": "Cited in the circuit-tracer README as the methods paper for attribution graphs. URL transcribed from the README."
+    },
+    {
+      "id": "lindsey2025biology",
+      "authors": "Lindsey, J., et al.",
+      "year": 2025,
+      "title": "On the Biology of a Large Language Model",
+      "venue": "Transformer Circuits Thread",
+      "arxiv_id": null,
+      "doi": null,
+      "url": "https://transformer-circuits.pub/2025/attribution-graphs/biology.html",
+      "mentioned_in": [
+        "notes/data_to_output_attribution.md",
+        "reports/starter_report.md"
+      ],
+      "verified": false,
+      "notes": "Cited in the circuit-tracer README as the biology paper using the attribution method. URL transcribed from the README."
+    },
+    {
+      "id": "hu2021lora",
+      "authors": "Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., Chen, W.",
+      "year": 2021,
+      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+      "venue": "ICLR 2022 (arXiv:2106.09685)",
+      "arxiv_id": "2106.09685",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "reports/experimental_rig_h3.md",
+        "examples/train_with_chain.py"
+      ],
+      "verified": false,
+      "notes": "LoRA paper. Cited as the parameter-efficient fine-tuning method used in the H3 rig."
+    },
+    {
+      "id": "carlini2021extracting",
+      "authors": "Carlini, N., Tramer, F., Wallace, E., et al.",
+      "year": 2021,
+      "title": "Extracting Training Data from Large Language Models",
+      "venue": "USENIX Security 2021 (arXiv:2012.07805)",
+      "arxiv_id": "2012.07805",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/integration_versus_derivation.md",
+        "notes/training_vs_inference_combinatorics.md"
+      ],
+      "verified": false,
+      "notes": "Memorization / training-data extraction. Cited for the claim that membership-inference recovers scraps but not the corpus."
+    },
+    {
+      "id": "openai2019gpt2dataset",
+      "authors": "OpenAI",
+      "year": 2019,
+      "title": "GPT-2 Output Dataset",
+      "venue": "GitHub: openai/gpt-2-output-dataset",
+      "arxiv_id": null,
+      "doi": null,
+      "url": "https://github.com/openai/gpt-2-output-dataset",
+      "mentioned_in": [
+        "src/chainright/datasets.py",
+        "examples/compare_token_distributions.py",
+        "examples/boolean_signatures.py",
+        "reports/starter_report.md"
+      ],
+      "verified": false,
+      "notes": "The dataset itself. Cloned and used throughout the project."
+    },
+    {
+      "id": "radford2019gpt2",
+      "authors": "Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., Sutskever, I.",
+      "year": 2019,
+      "title": "Language Models are Unsupervised Multitask Learners",
+      "venue": "OpenAI Technical Report",
+      "arxiv_id": null,
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "Implicit throughout — gpt-2 dataset is from this work"
+      ],
+      "verified": false,
+      "notes": "GPT-2 paper. Cited implicitly via the dataset; should be cited explicitly in the paper's related work."
+    },
+    {
+      "id": "wu2023bloomberggpt",
+      "authors": "Wu, S., Irsoy, O., Lu, S., Dabravolski, V., Dredze, M., Gehrmann, S., Kambadur, P., Rosenberg, D., Mann, G.",
+      "year": 2023,
+      "title": "BloombergGPT: A Large Language Model for Finance",
+      "venue": "arXiv:2303.17564",
+      "arxiv_id": "2303.17564",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/data_to_output_attribution.md (substitution argument)"
+      ],
+      "verified": false,
+      "notes": "BloombergGPT. Cited as evidence that domain-scoped models can match frontier-model performance on finance tasks."
+    },
+    {
+      "id": "ilyas2022datamodels",
+      "authors": "Ilyas, A., Park, S. M., Engstrom, L., Leclerc, G., Madry, A.",
+      "year": 2022,
+      "title": "Datamodels: Predicting Predictions from Training Data",
+      "venue": "ICML 2022",
+      "arxiv_id": "2202.00622",
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "notes/data_to_output_attribution.md",
+        "reports/hypotheses_to_test.md (H7)"
+      ],
+      "verified": false,
+      "notes": "Datamodels paper from the Madry lab. Cited as a frontier-scale-friendly proxy for influence functions."
+    },
+    {
+      "id": "occ2011sr11-7",
+      "authors": "OCC and Federal Reserve",
+      "year": 2011,
+      "title": "Supervisory Guidance on Model Risk Management (SR 11-7)",
+      "venue": "OCC Bulletin 2011-12 / Fed SR Letter 11-7",
+      "arxiv_id": null,
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "reports/potential_impact_in_financial_markets.md (open questions)"
+      ],
+      "verified": false,
+      "notes": "Foundational US bank model-risk-management framework. Cited as the regulatory anchor against which AI-deployment audit cost should be measured."
+    },
+    {
+      "id": "eu2024aiact",
+      "authors": "European Union",
+      "year": 2024,
+      "title": "Regulation (EU) 2024/1689 — AI Act",
+      "venue": "Official Journal of the European Union",
+      "arxiv_id": null,
+      "doi": null,
+      "url": null,
+      "mentioned_in": [
+        "reports/potential_impact_in_financial_markets.md (open questions)"
+      ],
+      "verified": false,
+      "notes": "EU AI Act. Cited for high-risk-system documentation requirements."
+    }
+  ],
+  "metadata": {
+    "total": 17,
+    "verified_count": 0,
+    "last_modified": "2026-05-10T18:27:02.292920+00:00"
+  }
+}
