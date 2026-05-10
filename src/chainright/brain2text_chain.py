@@ -1,7 +1,13 @@
-"""Two-layer letter→word chain for Brain2Text-style decoder outputs.
+"""Two-layer letter→word chain.
+
+Originally built for Brain2Text-style decoder output; works equally well
+for live typing, OCR, character-level handwriting, or any pipeline that
+emits one character at a time.
 
 Letter events: one block per character recognition with predicted_class,
-confidence, raw_signal_hash, and validity-per-NIST-dictionary.
+confidence, raw_signal_hash, and validity per the supplied character
+dictionary (`chainright.character_dictionary` by default;
+`chainright.nist_handwriting.sd19_dictionary()` for NIST framing).
 
 Word events: one block per assembled word with letter_block_indices
 linking back to composing letter events, plus corpus-membership result
@@ -10,6 +16,8 @@ linking back to composing letter events, plus corpus-membership result
 The two layers are linked through block-index pointers, so a regulator
 walking a word block can verify it composes from the recorded letters,
 and verify each letter against the dictionary id and signal hash.
+
+For phoneme-level decoders (BCI / speech CTC), see `chainright.phoneme`.
 
 See `notes/brain2text_letter_word_chain.md` for the full design.
 """
@@ -22,7 +30,7 @@ from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional, Set
 
 from chainright.blockchain import Blockchain
-from chainright.nist_dictionary import dictionary_id, is_valid_class
+from chainright.character_dictionary import dictionary_id, is_valid_class
 
 
 def _now_utc() -> str:
@@ -52,17 +60,17 @@ class LetterEventRecord:
 def chain_letter_event(
     blockchain: Blockchain,
     record: LetterEventRecord,
-    nist_dictionary: Set[str],
+    character_dictionary: Set[str],
     session_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Append a per-character recognition event to the chain.
 
     Returns block metadata plus the computed `valid` field. The block
-    payload includes `validity_per_nist_dictionary` (computed by checking
-    `record.predicted_class in nist_dictionary`) and `nist_class_set_id`
+    payload includes `validity_per_character_dictionary` (computed by checking
+    `record.predicted_class in character_dictionary`) and `character_set_id`
     (the deterministic hash of the dictionary).
     """
-    valid = is_valid_class(record.predicted_class, nist_dictionary)
+    valid = is_valid_class(record.predicted_class, character_dictionary)
     payload: Dict[str, Any] = {
         "kind": "letter_event",
         "session_id": session_id,
@@ -70,8 +78,8 @@ def chain_letter_event(
         "predicted_class": record.predicted_class,
         "confidence": float(record.confidence),
         "raw_signal_hash": record.raw_signal_hash,
-        "nist_class_set_id": dictionary_id(nist_dictionary),
-        "validity_per_nist_dictionary": valid,
+        "character_set_id": dictionary_id(character_dictionary),
+        "validity_per_character_dictionary": valid,
     }
     if record.extra:
         payload["extra"] = dict(record.extra)
@@ -214,7 +222,7 @@ def session_summary(blockchain: Blockchain, session_id: Optional[str] = None) ->
         kind = payload.get("kind")
         if kind == "letter_event":
             letter_count += 1
-            if payload.get("validity_per_nist_dictionary"):
+            if payload.get("validity_per_character_dictionary"):
                 letter_valid += 1
             else:
                 ch = payload.get("predicted_class")

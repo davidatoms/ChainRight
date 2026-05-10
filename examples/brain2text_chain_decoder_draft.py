@@ -65,8 +65,8 @@ from chainright.brain2text_chain import (
     chain_word_event,
     session_summary,
 )
+from chainright.character_dictionary import default_dictionary, dictionary_id
 from chainright.datasets import iter_records
-from chainright.nist_dictionary import default_dictionary, dictionary_id
 
 
 WORD_BOUNDARY_CHARS = set(" \t\n.,!?;:()")
@@ -189,7 +189,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 confidence=confidence,
                 raw_signal_hash=signal_hash,
             ),
-            nist_dictionary=nist_dict,
+            character_dictionary=nist_dict,
             session_id=args.session,
         )
         n_letters += 1
